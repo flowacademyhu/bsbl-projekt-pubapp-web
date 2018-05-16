@@ -8,8 +8,8 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "user_achievement")
-public class UserAchievement {
+@Table(name = "session")
+public class Session {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -26,13 +26,16 @@ public class UserAchievement {
     @Column(name = "updated_at", nullable = false)
     private Date updated;
 
+    @Column(name = "token", nullable = false)
+    private String token;
+
+    @Column(name = "expiration", nullable = false)
+    @DateTimeFormat(pattern= "yyyy-MM-dd'T'HH:mm")
+    private Date expiration;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "achievement_id")
-    private Achievement achievement;
 
     public Long getId() {
         return id;
@@ -58,19 +61,27 @@ public class UserAchievement {
         this.updated = updated;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public Date getExpiration() {
+        return expiration;
+    }
+
+    public void setExpiration(Date expiration) {
+        this.expiration = expiration;
+    }
+
     public User getUser() {
         return user;
     }
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public Achievement getAchievement() {
-        return achievement;
-    }
-
-    public void setAchievement(Achievement achievement) {
-        this.achievement = achievement;
     }
 }
