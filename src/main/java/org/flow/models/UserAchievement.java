@@ -26,7 +26,9 @@ public class UserAchievement {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    /*
     @ManyToOne
     @JoinColumn(name = "achievement_id")
     //private Achievement achievement;
+    */
 }
