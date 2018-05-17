@@ -42,7 +42,7 @@ public class Product {
     private List<AchievementCondition> achievementConditionList;
 
     @OneToOne(mappedBy = "product")
-    private Consumption consumption;
+    private OrderLine orderLine;
 
     public Long getId() {
         return id;
@@ -108,11 +108,11 @@ public class Product {
         this.achievementConditionList = achievementConditionList;
     }
 
-    public Consumption getConsumption() {
-        return consumption;
+    public OrderLine getOrderLine() {
+        return orderLine;
     }
 
-    public void setConsumption(Consumption consumption) {
-        this.consumption = consumption;
+    public void setOrderLine(OrderLine orderLine) {
+        this.orderLine = orderLine;
     }
 }

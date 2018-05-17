@@ -5,10 +5,11 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
-@Table(name = "coupon_item")
-public class CouponItem {
+@Table(name = "order_line")
+public class OrderLine {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -28,13 +29,16 @@ public class CouponItem {
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
-    @ManyToOne
-    @JoinColumn(name = "coupon_id")
-    private Coupon coupon;
+    @OneToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "orderLine_id")
-    private OrderLine orderLine;
+    @JoinColumn(name = "ordering_id")
+    private Ordering ordering;
+
+    @OneToMany(mappedBy = "orderLine")
+    private List<CouponItem> couponItemList;
 
     public Long getId() {
         return id;
@@ -68,19 +72,27 @@ public class CouponItem {
         this.quantity = quantity;
     }
 
-    public Coupon getCoupon() {
-        return coupon;
+    public Ordering getOrdering() {
+        return ordering;
     }
 
-    public void setCoupon(Coupon coupon) {
-        this.coupon = coupon;
+    public void setOrdering(Ordering ordering) {
+        this.ordering = ordering;
     }
 
-    public OrderLine getOrderLine() {
-        return orderLine;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setOrderLine(OrderLine orderLine) {
-        this.orderLine = orderLine;
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public List<CouponItem> getCouponItemList() {
+        return couponItemList;
+    }
+
+    public void setCouponItemList(List<CouponItem> couponItemList) {
+        this.couponItemList = couponItemList;
     }
 }

@@ -8,8 +8,8 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "consumption")
-public class Consumption {
+@Table(name = "ordering")
+public class Ordering {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -26,19 +26,11 @@ public class Consumption {
     @Column(name = "updated_at", nullable = false)
     private Date updated;
 
-    @Column(name = "quantity", nullable = false)
-    private Integer quantity;
+    @Column(name = "qr_code_path", nullable = false)
+    private String qrCodePath;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @OneToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
-
-    @OneToMany(mappedBy = "consumption")
-    private List<CouponItem> couponItemList;
+    @OneToMany(mappedBy = "ordering")
+    private List<OrderLine> orderLineList;
 
     public Long getId() {
         return id;
@@ -64,35 +56,19 @@ public class Consumption {
         this.updated = updated;
     }
 
-    public Integer getQuantity() {
-        return quantity;
+    public String getQrCodePath() {
+        return qrCodePath;
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
+    public void setQrCodePath(String qrCodePath) {
+        this.qrCodePath = qrCodePath;
     }
 
-    public User getUser() {
-        return user;
+    public List<OrderLine> getOrderLineList() {
+        return orderLineList;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public List<CouponItem> getCouponItemList() {
-        return couponItemList;
-    }
-
-    public void setCouponItemList(List<CouponItem> couponItemList) {
-        this.couponItemList = couponItemList;
+    public void setOrderLineList(List<OrderLine> orderLineList) {
+        this.orderLineList = orderLineList;
     }
 }
