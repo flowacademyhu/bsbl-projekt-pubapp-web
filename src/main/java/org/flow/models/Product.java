@@ -1,0 +1,118 @@
+package org.flow.models;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
+
+@Entity
+@Table(name = "product")
+public class Product {
+
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    @Column(name ="id", nullable = false)
+    private Long id;
+
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", nullable = false)
+    private Date created;
+
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "updated_at", nullable = false)
+    private Date updated;
+
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Column(name = "category", nullable = false)
+    private String category;
+
+    @Column(name = "price", nullable = false)
+    private Integer price;
+
+    @Column(name = "xp_value", nullable = false)
+    private Integer xp_value;
+
+    @OneToMany(mappedBy = "product")
+    private List<AchievementCondition> achievementConditionList;
+
+    @OneToOne(mappedBy = "product")
+    private Consumption consumption;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public Date getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(Date updated) {
+        this.updated = updated;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    public Integer getXp_value() {
+        return xp_value;
+    }
+
+    public void setXp_value(Integer xp_value) {
+        this.xp_value = xp_value;
+    }
+
+    public List<AchievementCondition> getAchievementConditionList() {
+        return achievementConditionList;
+    }
+
+    public void setAchievementConditionList(List<AchievementCondition> achievementConditionList) {
+        this.achievementConditionList = achievementConditionList;
+    }
+
+    public Consumption getConsumption() {
+        return consumption;
+    }
+
+    public void setConsumption(Consumption consumption) {
+        this.consumption = consumption;
+    }
+}

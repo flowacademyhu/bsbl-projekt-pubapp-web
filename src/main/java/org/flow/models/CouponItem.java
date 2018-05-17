@@ -2,14 +2,13 @@ package org.flow.models;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "user_achievement")
-public class UserAchievement {
+@Table(name = "coupon_item")
+public class CouponItem {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -26,13 +25,16 @@ public class UserAchievement {
     @Column(name = "updated_at", nullable = false)
     private Date updated;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
 
     @ManyToOne
-    @JoinColumn(name = "achievement_id")
-    private Achievement achievement;
+    @JoinColumn(name = "coupon_id")
+    private Coupon coupon;
+
+    @ManyToOne
+    @JoinColumn(name = "consumption_id")
+    private Consumption consumption;
 
     public Long getId() {
         return id;
@@ -58,19 +60,27 @@ public class UserAchievement {
         this.updated = updated;
     }
 
-    public User getUser() {
-        return user;
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
-    public Achievement getAchievement() {
-        return achievement;
+    public Coupon getCoupon() {
+        return coupon;
     }
 
-    public void setAchievement(Achievement achievement) {
-        this.achievement = achievement;
+    public void setCoupon(Coupon coupon) {
+        this.coupon = coupon;
+    }
+
+    public Consumption getConsumption() {
+        return consumption;
+    }
+
+    public void setConsumption(Consumption consumption) {
+        this.consumption = consumption;
     }
 }

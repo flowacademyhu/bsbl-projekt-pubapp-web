@@ -2,14 +2,14 @@ package org.flow.models;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
-@Table(name = "user_achievement")
-public class UserAchievement {
+@Table(name = "coupon")
+public class Coupon {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -26,13 +26,12 @@ public class UserAchievement {
     @Column(name = "updated_at", nullable = false)
     private Date updated;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "achievement_id")
     private Achievement achievement;
+
+    @OneToMany(mappedBy = "coupon")
+    private List<CouponItem> couponItemList;
 
     public Long getId() {
         return id;
@@ -58,19 +57,19 @@ public class UserAchievement {
         this.updated = updated;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public Achievement getAchievement() {
         return achievement;
     }
 
     public void setAchievement(Achievement achievement) {
         this.achievement = achievement;
+    }
+
+    public List<CouponItem> getCouponItemList() {
+        return couponItemList;
+    }
+
+    public void setCouponItemList(List<CouponItem> couponItemList) {
+        this.couponItemList = couponItemList;
     }
 }

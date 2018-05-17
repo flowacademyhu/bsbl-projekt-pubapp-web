@@ -2,14 +2,14 @@ package org.flow.models;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
-@Table(name = "user_achievement")
-public class UserAchievement {
+@Table(name = "consumption")
+public class Consumption {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -26,13 +26,19 @@ public class UserAchievement {
     @Column(name = "updated_at", nullable = false)
     private Date updated;
 
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "achievement_id")
-    private Achievement achievement;
+    @OneToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    @OneToMany(mappedBy = "consumption")
+    private List<CouponItem> couponItemList;
 
     public Long getId() {
         return id;
@@ -58,6 +64,14 @@ public class UserAchievement {
         this.updated = updated;
     }
 
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
     public User getUser() {
         return user;
     }
@@ -66,11 +80,19 @@ public class UserAchievement {
         this.user = user;
     }
 
-    public Achievement getAchievement() {
-        return achievement;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setAchievement(Achievement achievement) {
-        this.achievement = achievement;
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public List<CouponItem> getCouponItemList() {
+        return couponItemList;
+    }
+
+    public void setCouponItemList(List<CouponItem> couponItemList) {
+        this.couponItemList = couponItemList;
     }
 }
