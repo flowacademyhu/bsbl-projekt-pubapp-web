@@ -36,7 +36,7 @@ public class Product {
     private Integer price;
 
     @Column(name = "xp_value", nullable = false)
-    private Integer xp_value;
+    private Integer xpValue;
 
     @OneToMany(mappedBy = "product")
     private List<AchievementCondition> achievementConditionList;
@@ -92,12 +92,12 @@ public class Product {
         this.price = price;
     }
 
-    public Integer getXp_value() {
-        return xp_value;
+    public Integer getXpValue() {
+        return xpValue;
     }
 
-    public void setXp_value(Integer xp_value) {
-        this.xp_value = xp_value;
+    public void setXpValue(Integer xpValue) {
+        this.xpValue = xpValue;
     }
 
     public List<AchievementCondition> getAchievementConditionList() {

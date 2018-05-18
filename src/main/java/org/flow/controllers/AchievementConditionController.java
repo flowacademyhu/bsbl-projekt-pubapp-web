@@ -10,7 +10,7 @@ package org.flow.controllers;
         import java.util.Optional;
 
 @RestController
-@RequestMapping(path="/achievements")
+@RequestMapping(path="/achievements_condition")
 public class AchievementConditionController {
 
     @Autowired

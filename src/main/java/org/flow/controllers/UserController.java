@@ -14,8 +14,6 @@ import java.util.Date;
 import java.util.Optional;
 
 
-
-//http://localhost:8080/users/registration?password=1234&firstName=istvan&lastName=nagy&nickName=tyson&email=jesus@email.com&dob=1900-01-01&gender=true
 @RestController
 @RequestMapping(path="/users")
 public class UserController {
@@ -27,7 +25,7 @@ public class UserController {
     @GetMapping(path="/")
     public String getAllUsers (Model model) {
         model.addAttribute("user", userRepository.findAll());
-        return "userList";
+        return "user/user_list";
     }
 
     //get user by ID
@@ -39,17 +37,15 @@ public class UserController {
         }
 
         model.addAttribute("user", userRepository.findById(id).get());
-        return "user";
+        return "user/user";
     }
-
 
     //get create user form
     @GetMapping(path="/registration")
     public String newUser(Model model) {
         model.addAttribute("user", new User());
-        return "userNew";
+        return "user/new_user";
     }
-
 
     //create new user
     @PostMapping(path="/registration")
@@ -66,7 +62,7 @@ public class UserController {
         newUser.setGender(user.getGender());
         userRepository.save(newUser);
         model.addAttribute("user", userRepository.findAll());
-        return "userList";
+        return "user/user_list";
     }
 
 
@@ -74,7 +70,7 @@ public class UserController {
     @GetMapping(path="/{id}/edit")
     public String editUser(@PathVariable("id") long id, Model model) {
         model.addAttribute("user", userRepository.findById(id).get());
-        return "userEdit";
+        return "user/user";
     }
 
     //update user
@@ -92,17 +88,15 @@ public class UserController {
         updatedUser.setDob(user.getDob());
         updatedUser.setGender(user.getGender());
         model.addAttribute("user", userRepository.findAll());
-        return "userList";
+        return "user_list";
     }
-
-
 
     //delete user by ID
     @PostMapping(path = "/{id}")
     public String deleteUser(@PathVariable("id") long id, Model model) {
         userRepository.deleteById(id);
         model.addAttribute("user", userRepository.findAll());
-        return "userList";
+        return "user_list";
     }
 
 }
