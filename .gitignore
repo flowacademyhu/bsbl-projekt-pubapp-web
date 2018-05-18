@@ -8,6 +8,7 @@ src/.idea/
 gradlew
 gradlew.bat
 
+**/node_modules
 *.txt
 *.iml
 
