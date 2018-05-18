@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.Optional;
 
+
+
+//http://localhost:8080/users/registration?password=1234&firstName=istvan&lastName=nagy&nickName=tyson&email=jesus@email.com&dob=1900-01-01&gender=true
 @RestController
 @RequestMapping(path="/users")
 public class UserController {
