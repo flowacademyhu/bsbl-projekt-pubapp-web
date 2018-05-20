@@ -23,80 +23,65 @@ public class UserController {
 
     //get all users
     @GetMapping(path="/")
-    public String getAllUsers (Model model) {
-        model.addAttribute("user", userRepository.findAll());
-        return "user/user_list";
+    public @ResponseBody Iterable<User> getAllUsers () {
+        return userRepository.findAll();
     }
 
     //get user by ID
     @GetMapping(path = "/{id}")
-    public String getUserById (@PathVariable("id") long id, Model model)  throws UserNotFoundException {
+    public @ResponseBody User getUserById (@PathVariable("id") Long id)  throws UserNotFoundException {
         Optional<User> user = userRepository.findById(id);
         if (!user.isPresent()) {
             throw new UserNotFoundException("User not found.");
         }
-
-        model.addAttribute("user", userRepository.findById(id).get());
-        return "user/user";
-    }
-
-    //get create user form
-    @GetMapping(path="/registration")
-    public String newUser(Model model) {
-        model.addAttribute("user", new User());
-        return "user/new_user";
+        return user.get();
     }
 
     //create new user
-    @PostMapping(path="/registration")
-    public @ResponseBody String addNewUser (@ModelAttribute User user, Model model) {
+    @PostMapping(path="/")
+    public @ResponseBody User addNewUser (@RequestParam String firstName, @RequestParam String lastName,
+                                          @RequestParam String nickName, @RequestParam String password,
+                                          @RequestParam String email, @RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") Date dob,
+                                          @RequestParam Boolean gender) {
         User newUser = new User();
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String hashedPassword = passwordEncoder.encode(user.getPassword());
+        String hashedPassword = passwordEncoder.encode(password);
         newUser.setPassword(hashedPassword);
-        newUser.setFirstName(user.getFirstName());
-        newUser.setLastName(user.getLastName());
-        newUser.setNickName(user.getNickName());
-        newUser.setEmail(user.getEmail());
-        newUser.setDob(user.getDob());
-        newUser.setGender(user.getGender());
+        newUser.setFirstName(firstName);
+        newUser.setLastName(lastName);
+        newUser.setNickName(nickName);
+        newUser.setEmail(email);
+        newUser.setDob(dob);
+        newUser.setGender(gender);
         userRepository.save(newUser);
-        model.addAttribute("user", userRepository.findAll());
-        return "user/user_list";
-    }
-
-
-    //get user edit form
-    @GetMapping(path="/{id}/edit")
-    public String editUser(@PathVariable("id") long id, Model model) {
-        model.addAttribute("user", userRepository.findById(id).get());
-        return "user/user";
+        return newUser;
     }
 
     //update user
-    @PostMapping(path="/{id}/edit")
-    public String updateUser(@PathVariable("id") long id, @ModelAttribute User user,
-                             Model model) {
+    @PutMapping(path="/{id}")
+    public @ResponseBody User updateUser(@PathVariable("id") Long id, @RequestParam String firstName,
+                             @RequestParam String lastName, @RequestParam String nickName,
+                             @RequestParam String password, @RequestParam String email,
+                             @RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") Date dob, @RequestParam Boolean gender) {
         User updatedUser = userRepository.findById(id).get();
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String hashedPassword = passwordEncoder.encode(user.getPassword());
+        String hashedPassword = passwordEncoder.encode(password);
         updatedUser.setPassword(hashedPassword);
-        updatedUser.setFirstName(user.getFirstName());
-        updatedUser.setLastName(user.getLastName());
-        updatedUser.setNickName(user.getNickName());
-        updatedUser.setEmail(user.getEmail());
-        updatedUser.setDob(user.getDob());
-        updatedUser.setGender(user.getGender());
-        model.addAttribute("user", userRepository.findAll());
-        return "user_list";
+        updatedUser.setFirstName(firstName);
+        updatedUser.setLastName(lastName);
+        updatedUser.setNickName(nickName);
+        updatedUser.setEmail(email);
+        updatedUser.setDob(dob);
+        updatedUser.setGender(gender);
+        userRepository.save(updatedUser);
+        return updatedUser;
     }
 
     //delete user by ID
-    @PostMapping(path = "/{id}")
-    public String deleteUser(@PathVariable("id") long id, Model model) {
+    @DeleteMapping(path = "/{id}")
+    public@ResponseBody Iterable<User> deleteUser(@PathVariable("id") Long id) {
         userRepository.deleteById(id);
-        model.addAttribute("user", userRepository.findAll());
-        return "user_list";
+        return userRepository.findAll();
     }
 
 }
