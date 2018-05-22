@@ -47,16 +47,54 @@ public class AchievementConditionController {
     }
 
     //create new achievement condition
+<<<<<<< HEAD
     @PostMapping(path = "/{id}/achievement_conditions")
     public @ResponseBody
     AchievementCondition addNewAchievementCondition(@PathVariable("id") Long id,
                                                     @RequestParam Integer quantity,
                                                     @RequestParam String productName) {
+=======
+    @PostMapping(path="/{id}/achievement_conditions")
+    public @ResponseBody AchievementCondition addNewAchievementCondition (@PathVariable("id") Long id,
+                                                                          @RequestParam Integer quantity,
+                                                                          @RequestParam String productName) {
+        Achievement achievement = achievementRepository.findById(id).get();
+>>>>>>> ac805a5ae438fc62f3bcc84fbc3e8ba0d8ee5f6d
         AchievementCondition newAchievementCondition = new AchievementCondition();
         newAchievementCondition.setQuantity(quantity);
         newAchievementCondition.setAchievement(achievementRepository.findById(id).get());
         newAchievementCondition.setProduct(productRepository.findByName(productName));
+        List<AchievementCondition> achievementConditionList = achievement.getAchievementConditionList();
         achievementConditionRepository.save(newAchievementCondition);
+        achievementConditionList.add(newAchievementCondition);
+        achievement.setAchievementConditionList(achievementConditionList);
         return newAchievementCondition;
     }
+<<<<<<< HEAD
 }
+=======
+
+    //update achievement condition
+    @PutMapping(path="/{id}/achievement_conditions/{id2}")
+    public @ResponseBody AchievementCondition updateAchievementCondition(@PathVariable("id2") Long id,
+                                                                         @RequestParam Integer quantity,
+                                                                         @RequestParam String productName) {
+        AchievementCondition achievementCondition = achievementConditionRepository.findById(id).get();
+        achievementCondition.setQuantity(quantity);
+        achievementCondition.setProduct(productRepository.findByName(productName));
+        achievementConditionRepository.save(achievementCondition);
+        return achievementCondition;
+    }
+
+    //delete achievement condition
+    @DeleteMapping(path="/{id}/achievement_conditions/{id2}")
+    public @ResponseBody Iterable<AchievementCondition> deleteAchievementCondition(@PathVariable("id") Long id, @PathVariable("id2") Long id2) {
+        Achievement achievement = achievementRepository.findById(id).get();
+        List<AchievementCondition> achievementConditionList = achievement.getAchievementConditionList();
+        achievementConditionList.remove(achievementConditionRepository.findById(id2));
+        achievement.setAchievementConditionList(achievementConditionList);
+        achievementConditionRepository.deleteById(id2);
+        return achievementConditionRepository.findAll();
+    }
+}
+>>>>>>> ac805a5ae438fc62f3bcc84fbc3e8ba0d8ee5f6d

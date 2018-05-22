@@ -77,5 +77,4 @@ public class OrderLineController {
         orderLineRepository.deleteById(id);
         return orderLineRepository.findAll();
     }
-
 }
