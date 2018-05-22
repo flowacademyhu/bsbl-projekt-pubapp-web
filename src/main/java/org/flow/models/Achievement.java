@@ -40,15 +40,6 @@ public class Achievement {
     @DateTimeFormat(pattern= "yyyy-MM-dd'T'HH:mm")
     private Date expiration;
 
-    @OneToMany(mappedBy = "achievement")
-    private List<AchievementCondition> achievementConditionList;
-
-    @OneToMany(mappedBy = "achievement")
-    private List<UserAchievement> userAchievementList;
-
-    @OneToOne(mappedBy = "achievement")
-    private Coupon coupon;
-
     public Long getId() {
         return id;
     }
@@ -103,29 +94,5 @@ public class Achievement {
 
     public void setExpiration(Date expiration) {
         this.expiration = expiration;
-    }
-
-    public List<AchievementCondition> getAchievementConditionList() {
-        return achievementConditionList;
-    }
-
-    public void setAchievementConditionList(List<AchievementCondition> achievementConditionList) {
-        this.achievementConditionList = achievementConditionList;
-    }
-
-    public List<UserAchievement> getUserAchievementList() {
-        return userAchievementList;
-    }
-
-    public void setUserAchievementList(List<UserAchievement> userAchievementList) {
-        this.userAchievementList = userAchievementList;
-    }
-
-    public Coupon getCoupon() {
-        return coupon;
-    }
-
-    public void setCoupon(Coupon coupon) {
-        this.coupon = coupon;
     }
 }

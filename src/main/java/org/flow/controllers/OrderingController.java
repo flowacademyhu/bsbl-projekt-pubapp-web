@@ -28,14 +28,15 @@ public class OrderingController {
 
     //create new ordering
     @PostMapping(path="/")
-    public @ResponseBody Ordering addNewOrdering () {
+    public @ResponseBody Ordering addNewOrdering (@RequestParam String qrCodePath) {
         Ordering newOrdering = new Ordering();
+        newOrdering.setQrCodePath(qrCodePath);
         orderingRepository.save(newOrdering);
         return newOrdering;
     }
 
     //update ordering
-    @PostMapping(path="/{id}")
+    @PutMapping(path="/{id}")
     public @ResponseBody Ordering updateOrdering (@PathVariable("id") Long id) {
         Ordering updatedOrdering = orderingRepository.findById(id).get();
         orderingRepository.save(updatedOrdering);

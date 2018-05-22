@@ -29,9 +29,6 @@ public class Ordering {
     @Column(name = "qr_code_path", nullable = false)
     private String qrCodePath;
 
-    @OneToMany(mappedBy = "ordering")
-    private List<OrderLine> orderLineList;
-
     public Long getId() {
         return id;
     }
@@ -62,13 +59,5 @@ public class Ordering {
 
     public void setQrCodePath(String qrCodePath) {
         this.qrCodePath = qrCodePath;
-    }
-
-    public List<OrderLine> getOrderLineList() {
-        return orderLineList;
-    }
-
-    public void setOrderLineList(List<OrderLine> orderLineList) {
-        this.orderLineList = orderLineList;
     }
 }

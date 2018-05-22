@@ -41,7 +41,7 @@ public class ProductController {
     }
 
     // update product
-    @PostMapping(path="/{id}")
+    @PutMapping(path="/{id}")
     public @ResponseBody Product updateProduct (@PathVariable("id") Long id, @RequestParam String name, @RequestParam String category, @RequestParam int price, @RequestParam int xp_value) {
         Product updatedProduct = productRepository.findById(id).get();
         updatedProduct.setName(name);
