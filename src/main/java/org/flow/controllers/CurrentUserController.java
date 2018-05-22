@@ -81,6 +81,4 @@ public class CurrentUserController {
         userRepository.save(currentUser);
         return new ResponseEntity<User>(currentUser, HttpStatus.OK);
     }
-
-
 }
