@@ -6,6 +6,7 @@ import org.flow.repositories.AchievementConditionRepository;
 import org.flow.repositories.AchievementRepository;
 import org.flow.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,17 +27,13 @@ public class AchievementConditionController {
 
     //get achievement conditions
     @GetMapping(path = "/{id}/achievement_conditions")
-    public List<AchievementCondition> findAchievementConditions(@PathVariable("id") Long id) {
-        Achievement achievement = achievementRepository.findById(id).get();
-        List<AchievementCondition> conditions = achievement.getAchievementConditionList();
-        return conditions;
+    public Iterable<AchievementCondition> findAchievementConditions(@PathVariable("id") Long id, Pageable pageable) {
+        return achievementConditionRepository.findByAchievementId(id, pageable);
     }
 
     //get achievement condition by ID
     @GetMapping(path = "/{id}/achievement_conditions/{id2}")
-    public @ResponseBody
-    AchievementCondition getAchievementConditionById(@PathVariable("id") Long id, @PathVariable("id") Long id2) throws AchievementNotFoundException {
-        Optional<Achievement> achievement = achievementRepository.findById(id);
+    public @ResponseBody AchievementCondition getAchievementConditionById(@PathVariable("id") Long id2) throws AchievementNotFoundException {
         Optional<AchievementCondition> achievementCondition = achievementConditionRepository.findById(id2);
         return achievementCondition.get();
     }
@@ -46,15 +43,11 @@ public class AchievementConditionController {
     public @ResponseBody AchievementCondition addNewAchievementCondition (@PathVariable("id") Long id,
                                                                           @RequestParam Integer quantity,
                                                                           @RequestParam String productName) {
-        Achievement achievement = achievementRepository.findById(id).get();
         AchievementCondition newAchievementCondition = new AchievementCondition();
         newAchievementCondition.setQuantity(quantity);
         newAchievementCondition.setAchievement(achievementRepository.findById(id).get());
         newAchievementCondition.setProduct(productRepository.findByName(productName));
-        List<AchievementCondition> achievementConditionList = achievement.getAchievementConditionList();
         achievementConditionRepository.save(newAchievementCondition);
-        achievementConditionList.add(newAchievementCondition);
-        achievement.setAchievementConditionList(achievementConditionList);
         return newAchievementCondition;
     }
 
@@ -72,11 +65,7 @@ public class AchievementConditionController {
 
     //delete achievement condition
     @DeleteMapping(path="/{id}/achievement_conditions/{id2}")
-    public @ResponseBody Iterable<AchievementCondition> deleteAchievementCondition(@PathVariable("id") Long id, @PathVariable("id2") Long id2) {
-        Achievement achievement = achievementRepository.findById(id).get();
-        List<AchievementCondition> achievementConditionList = achievement.getAchievementConditionList();
-        achievementConditionList.remove(achievementConditionRepository.findById(id2));
-        achievement.setAchievementConditionList(achievementConditionList);
+    public @ResponseBody Iterable<AchievementCondition> deleteAchievementCondition(@PathVariable("id2") Long id2) {
         achievementConditionRepository.deleteById(id2);
         return achievementConditionRepository.findAll();
     }
