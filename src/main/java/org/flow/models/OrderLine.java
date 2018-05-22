@@ -31,7 +31,7 @@ public class OrderLine {
 
     @OneToOne
     @JoinColumn(name = "product_id")
-    private Product product;
+    private Integer product;
 
     @ManyToOne
     @JoinColumn(name = "ordering_id")
@@ -80,11 +80,11 @@ public class OrderLine {
         this.ordering = ordering;
     }
 
-    public Product getProduct() {
+    public Integer getProduct() {
         return product;
     }
 
-    public void setProduct(Product product) {
+    public void setProduct(Integer product) {
         this.product = product;
     }
 

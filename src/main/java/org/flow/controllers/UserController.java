@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -59,7 +58,7 @@ public class UserController {
 
     //update user
     @PutMapping(path="/{id}")
-    public @ResponseBody User updateUser(@PathVariable("id") Long id, @RequestParam String firstName,
+    public @ResponseBody User updateUser (@PathVariable("id") Long id, @RequestParam String firstName,
                              @RequestParam String lastName, @RequestParam String nickName,
                              @RequestParam String password, @RequestParam String email,
                              @RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") Date dob, @RequestParam Boolean gender) {
@@ -79,7 +78,7 @@ public class UserController {
 
     //delete user by ID
     @DeleteMapping(path = "/{id}")
-    public@ResponseBody Iterable<User> deleteUser(@PathVariable("id") Long id) {
+    public @ResponseBody Iterable<User> deleteUser (@PathVariable("id") Long id) {
         userRepository.deleteById(id);
         return userRepository.findAll();
     }
