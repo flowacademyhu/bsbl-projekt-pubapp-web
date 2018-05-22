@@ -59,9 +59,9 @@ public class UserController {
     //update user
     @PutMapping(path="/{id}")
     public @ResponseBody User updateUser (@PathVariable("id") Long id, @RequestParam String firstName,
-                             @RequestParam String lastName, @RequestParam String nickName,
-                             @RequestParam String password, @RequestParam String email,
-                             @RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") Date dob, @RequestParam Boolean gender) {
+                                          @RequestParam String lastName, @RequestParam String nickName,
+                                          @RequestParam String password, @RequestParam String email,
+                                          @RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") Date dob, @RequestParam Boolean gender) {
         User updatedUser = userRepository.findById(id).get();
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String hashedPassword = passwordEncoder.encode(password);
