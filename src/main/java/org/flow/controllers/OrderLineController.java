@@ -29,7 +29,7 @@ public class OrderLineController {
     }
 
 
-    // get orderLine by ID
+    //get orderLine by ID
     @GetMapping(path="/{id}/orderlines/{id2}")
     public @ResponseBody OrderLine getOrderLineById (@PathVariable("id2") Long id) {
         Optional<OrderLine> orderLine = orderLineRepository.findById(id);
@@ -40,14 +40,10 @@ public class OrderLineController {
     @PostMapping(path="/{id}/orderlines/")
     public @ResponseBody OrderLine addNewOrderLine (@PathVariable("id") Long orderId, @RequestParam Product product_id, @RequestParam int quantity) {
         OrderLine newOrderLine = new OrderLine();
-        Ordering parentOrdering = orderingRepository.findById(orderId).get();
-        newOrderLine.setOrdering(parentOrdering);
+        newOrderLine.setOrdering(orderingRepository.findById(orderId).get());
         newOrderLine.setProduct(product_id);
         newOrderLine.setQuantity(quantity);
-        List<OrderLine> parentOrderingsOrderLineList = parentOrdering.getOrderLineList();
         orderLineRepository.save(newOrderLine);
-        parentOrderingsOrderLineList.add(newOrderLine);
-        parentOrdering.setOrderLineList(parentOrderingsOrderLineList);
         return newOrderLine;
     }
 
@@ -65,10 +61,6 @@ public class OrderLineController {
     //delete orderLine by ID
     @DeleteMapping(path = "/{id}/orderlines/{id2}")
     public @ResponseBody Iterable<OrderLine> deleteOrderLine (@PathVariable("id") Long orderId, @PathVariable("id2") Long id) {
-        Ordering parentOrdering = orderingRepository.findById(id).get();
-        List<OrderLine> parentOrderingsOrderLineList = parentOrdering.getOrderLineList();
-        parentOrderingsOrderLineList.remove(orderLineRepository.findById(id));
-        parentOrdering.setOrderLineList(parentOrderingsOrderLineList);
         orderLineRepository.deleteById(id);
         return orderLineRepository.findAll();
     }
