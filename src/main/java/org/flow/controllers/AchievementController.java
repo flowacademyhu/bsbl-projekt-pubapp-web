@@ -37,7 +37,7 @@ public class AchievementController {
     @PostMapping(path="/")
     public @ResponseBody Achievement addNewAchievement (@RequestParam String name, @RequestParam String description,
                                                    @RequestParam Integer xpValue,
-                                                   @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd'T'HH:mm") Date expiration) {
+                                                   @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date expiration) {
         Achievement newAchievement = new Achievement();
         newAchievement.setName(name);
         newAchievement.setDescription(description);
