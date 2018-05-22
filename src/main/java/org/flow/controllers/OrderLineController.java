@@ -23,8 +23,12 @@ public class OrderLineController {
     //get all orderLines for the current ordering
     @GetMapping(path="/{id}/orderlines")
     public @ResponseBody List<OrderLine> findOrderLines (@PathVariable("id") Long id) {
-        Ordering order = orderingRepository.findById(id).get();
-        List<OrderLine> orderLineList = order.getOrderLineList();
+        List<OrderLine> orderLineList = new ArrayList();
+        for (OrderLine orderLine : orderLineList) {
+            if (orderLine.getOrdering().getId() == orderingRepository.findById(id).get().getId()) {
+                orderLineList.add(orderLine);
+            }
+        }
         return orderLineList;
     }
 
