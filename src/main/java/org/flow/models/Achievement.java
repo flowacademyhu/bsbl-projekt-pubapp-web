@@ -13,7 +13,7 @@ import java.util.List;
 public class Achievement {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name ="id", nullable = false)
     private Long id;
 
@@ -37,7 +37,7 @@ public class Achievement {
     private int xpValue;
 
     @Column(name = "expiration", nullable = false)
-    @DateTimeFormat(pattern= "yyyy-MM-dd'T'HH:mm")
+    @DateTimeFormat(pattern= "yyyy-MM-dd")
     private Date expiration;
 
     public Long getId() {

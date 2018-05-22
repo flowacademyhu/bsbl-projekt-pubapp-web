@@ -12,7 +12,7 @@ import java.util.List;
 public class Product {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name ="id", nullable = false)
     private Long id;
 
@@ -37,9 +37,6 @@ public class Product {
 
     @Column(name = "xp_value", nullable = false)
     private Integer xpValue;
-
-    @OneToOne(mappedBy = "product")
-    private OrderLine orderLine;
 
     public Long getId() {
         return id;
@@ -95,13 +92,5 @@ public class Product {
 
     public void setXpValue(Integer xpValue) {
         this.xpValue = xpValue;
-    }
-
-    public OrderLine getOrderLine() {
-        return orderLine;
-    }
-
-    public void setOrderLine(OrderLine orderLine) {
-        this.orderLine = orderLine;
     }
 }

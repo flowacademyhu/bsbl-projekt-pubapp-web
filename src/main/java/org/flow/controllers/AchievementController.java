@@ -51,7 +51,7 @@ public class AchievementController {
     @PutMapping(path="/{id}/")
     public @ResponseBody Achievement updateAchievement(@PathVariable("id") Long id, @RequestParam String name,
                                                        @RequestParam String description, @RequestParam Integer xpValue,
-                                                       @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd'T'HH:mm") Date expiration) {
+                                                       @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date expiration) {
         Achievement updatedAchievement = achievementRepository.findById(id).get();
         updatedAchievement.setName(name);
         updatedAchievement.setDescription(description);

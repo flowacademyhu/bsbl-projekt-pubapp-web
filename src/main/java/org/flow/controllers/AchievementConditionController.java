@@ -22,13 +22,23 @@ public class AchievementConditionController {
 
     @Autowired
     private AchievementRepository achievementRepository;
+    @Autowired
     private AchievementConditionRepository achievementConditionRepository;
+    @Autowired
     private ProductRepository productRepository;
 
     //get achievement conditions
     @GetMapping(path = "/{id}/achievement_conditions")
-    public Iterable<AchievementCondition> findAchievementConditions(@PathVariable("id") Long id, Pageable pageable) {
-        return achievementConditionRepository.findByAchievementId(id, pageable);
+    public Iterable<AchievementCondition> findAchievementConditions(@PathVariable("id") Long id) {
+        Iterable<AchievementCondition> allAchievementConditions = achievementConditionRepository.findAll();
+        List<AchievementCondition> achievementConditionList = new ArrayList();
+        for (AchievementCondition achievementCondition : allAchievementConditions) {
+            if (achievementCondition.getAchievement().getId().equals(achievementRepository.findById(id).get().getId())) {
+                achievementConditionList.add(achievementCondition);
+            }
+        }
+        Iterable<AchievementCondition> conditions = achievementConditionList;
+        return conditions;
     }
 
     //get achievement condition by ID
