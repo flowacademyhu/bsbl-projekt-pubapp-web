@@ -1,9 +1,9 @@
 import React from 'react';
 
-export default class example extends React.Component {
+export default class routes extends React.Component {
 render() {
 return(
-<div> exapmle</div>
+<div> routes</div>
 )
 }
 }
