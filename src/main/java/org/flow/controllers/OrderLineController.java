@@ -23,14 +23,9 @@ public class OrderLineController {
     //get all orderLines for the current ordering
     @GetMapping(path="/{id}/orderlines")
     public @ResponseBody List<OrderLine> findOrderLines (@PathVariable("id") Long id) {
-        Iterable<OrderLine> allOrderLines = orderLineRepository.findAll();
-        List<OrderLine> conditions = new ArrayList<>();
-        for (OrderLine condition : allOrderLines) {
-            if (condition.getOrdering().equals(orderingRepository.findById(id).get())) {
-                conditions.add(condition);
-            }
-        }
-        return conditions;
+        Ordering order = orderingRepository.findById(id).get();
+        List<OrderLine> orderLineList = order.getOrderLineList();
+        return orderLineList;
     }
 
 
@@ -57,7 +52,7 @@ public class OrderLineController {
     }
 
     //update orderLine
-    @PostMapping(path="/{id}/orderlines/{id2}")
+    @PutMapping(path="/{id}/orderlines/{id2}")
     public @ResponseBody OrderLine updateOrderLine (@PathVariable("id2") Long id, @RequestParam Product product_id, @RequestParam int quantity) {
         OrderLine updatedOrderLine = orderLineRepository.findById(id).get();
         updatedOrderLine.setProduct(product_id);

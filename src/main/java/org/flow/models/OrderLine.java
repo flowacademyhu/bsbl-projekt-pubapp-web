@@ -37,9 +37,6 @@ public class OrderLine {
     @JoinColumn(name = "ordering_id")
     private Ordering ordering;
 
-    @OneToMany(mappedBy = "orderLine")
-    private List<CouponItem> couponItemList;
-
     public Long getId() {
         return id;
     }
@@ -86,13 +83,5 @@ public class OrderLine {
 
     public void setProduct(Product product) {
         this.product = product;
-    }
-
-    public List<CouponItem> getCouponItemList() {
-        return couponItemList;
-    }
-
-    public void setCouponItemList(List<CouponItem> couponItemList) {
-        this.couponItemList = couponItemList;
     }
 }

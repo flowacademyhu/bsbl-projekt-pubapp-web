@@ -49,12 +49,6 @@ public class User {
     @Column(name = "gender", nullable = false)
     private Boolean gender;
 
-    @OneToMany(mappedBy = "user")
-    private List<UserAchievement> userAchievementList;
-
-    @OneToMany(mappedBy = "user")
-    private List<Session> sessionList;
-
     public Long getId() {
         return id;
     }
@@ -133,21 +127,5 @@ public class User {
 
     public void setGender(Boolean gender) {
         this.gender = gender;
-    }
-
-    public List<UserAchievement> getUserAchievementList() {
-        return userAchievementList;
-    }
-
-    public void setUserAchievementList(List<UserAchievement> userAchievementList) {
-        this.userAchievementList = userAchievementList;
-    }
-
-    public List<Session> getSessionList() {
-        return sessionList;
-    }
-
-    public void setSessionList(List<Session> sessionList) {
-        this.sessionList = sessionList;
     }
 }

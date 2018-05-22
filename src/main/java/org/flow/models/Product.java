@@ -38,9 +38,6 @@ public class Product {
     @Column(name = "xp_value", nullable = false)
     private Integer xpValue;
 
-    @OneToMany(mappedBy = "product")
-    private List<AchievementCondition> achievementConditionList;
-
     @OneToOne(mappedBy = "product")
     private OrderLine orderLine;
 
@@ -98,14 +95,6 @@ public class Product {
 
     public void setXpValue(Integer xpValue) {
         this.xpValue = xpValue;
-    }
-
-    public List<AchievementCondition> getAchievementConditionList() {
-        return achievementConditionList;
-    }
-
-    public void setAchievementConditionList(List<AchievementCondition> achievementConditionList) {
-        this.achievementConditionList = achievementConditionList;
     }
 
     public OrderLine getOrderLine() {

@@ -27,13 +27,8 @@ public class AchievementConditionController {
     //get achievement conditions
     @GetMapping(path = "/{id}/achievement_conditions")
     public List<AchievementCondition> findAchievementConditions(@PathVariable("id") Long id) {
-        Iterable<AchievementCondition> allAchievementConditions = achievementConditionRepository.findAll();
-        List<AchievementCondition> conditions = new ArrayList<>();
-        for (AchievementCondition condition : allAchievementConditions) {
-            if (condition.getAchievement().equals(achievementRepository.findById(id).get())) {
-                conditions.add(condition);
-            }
-        }
+        Achievement achievement = achievementRepository.findById(id).get();
+        List<AchievementCondition> conditions = achievement.getAchievementConditionList();
         return conditions;
     }
 
