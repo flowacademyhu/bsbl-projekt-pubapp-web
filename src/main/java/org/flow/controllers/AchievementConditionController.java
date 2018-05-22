@@ -47,19 +47,11 @@ public class AchievementConditionController {
     }
 
     //create new achievement condition
-<<<<<<< HEAD
-    @PostMapping(path = "/{id}/achievement_conditions")
-    public @ResponseBody
-    AchievementCondition addNewAchievementCondition(@PathVariable("id") Long id,
-                                                    @RequestParam Integer quantity,
-                                                    @RequestParam String productName) {
-=======
     @PostMapping(path="/{id}/achievement_conditions")
     public @ResponseBody AchievementCondition addNewAchievementCondition (@PathVariable("id") Long id,
                                                                           @RequestParam Integer quantity,
                                                                           @RequestParam String productName) {
         Achievement achievement = achievementRepository.findById(id).get();
->>>>>>> ac805a5ae438fc62f3bcc84fbc3e8ba0d8ee5f6d
         AchievementCondition newAchievementCondition = new AchievementCondition();
         newAchievementCondition.setQuantity(quantity);
         newAchievementCondition.setAchievement(achievementRepository.findById(id).get());
@@ -70,9 +62,6 @@ public class AchievementConditionController {
         achievement.setAchievementConditionList(achievementConditionList);
         return newAchievementCondition;
     }
-<<<<<<< HEAD
-}
-=======
 
     //update achievement condition
     @PutMapping(path="/{id}/achievement_conditions/{id2}")
@@ -97,4 +86,3 @@ public class AchievementConditionController {
         return achievementConditionRepository.findAll();
     }
 }
->>>>>>> ac805a5ae438fc62f3bcc84fbc3e8ba0d8ee5f6d
