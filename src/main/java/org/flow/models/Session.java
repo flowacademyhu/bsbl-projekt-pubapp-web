@@ -30,7 +30,6 @@ public class Session {
     private String token;
 
     @Column(name = "expiration", nullable = false)
-    @DateTimeFormat(pattern= "yyyy-MM-dd'T'HH:mm")
     private Date expiration;
 
     @ManyToOne

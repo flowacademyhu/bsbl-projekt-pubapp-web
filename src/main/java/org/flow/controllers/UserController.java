@@ -41,7 +41,7 @@ public class UserController {
     public @ResponseBody User addNewUser (@RequestParam String firstName, @RequestParam String lastName,
                                           @RequestParam String nickName, @RequestParam String password,
                                           @RequestParam String email, @RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") Date dob,
-                                          @RequestParam Boolean gender) {
+                                          @RequestParam Boolean gender, @RequestParam String role) {
         User newUser = new User();
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String hashedPassword = passwordEncoder.encode(password);
@@ -52,6 +52,7 @@ public class UserController {
         newUser.setEmail(email);
         newUser.setDob(dob);
         newUser.setGender(gender);
+        newUser.setRoleType(User.RoleTypes.valueOf(role));
         userRepository.save(newUser);
         return newUser;
     }
@@ -61,7 +62,8 @@ public class UserController {
     public @ResponseBody User updateUser (@PathVariable("id") Long id, @RequestParam String firstName,
                                           @RequestParam String lastName, @RequestParam String nickName,
                                           @RequestParam String password, @RequestParam String email,
-                                          @RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") Date dob, @RequestParam Boolean gender) {
+                                          @RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") Date dob, @RequestParam Boolean gender,
+                                          @RequestParam String role) {
         User updatedUser = userRepository.findById(id).get();
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String hashedPassword = passwordEncoder.encode(password);
@@ -72,6 +74,7 @@ public class UserController {
         updatedUser.setEmail(email);
         updatedUser.setDob(dob);
         updatedUser.setGender(gender);
+        updatedUser.setRoleType(User.RoleTypes.valueOf(role));
         userRepository.save(updatedUser);
         return updatedUser;
     }

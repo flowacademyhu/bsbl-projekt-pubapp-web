@@ -11,6 +11,16 @@ import java.util.List;
 @Table(name = "product")
 public class Product {
 
+    public enum CategoryType {
+        SOFT,
+        BEER,
+        WINE,
+        WHISKEY,
+        VODKA,
+        TEQUILA,
+        MISC
+    }
+
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name ="id", nullable = false)
@@ -29,8 +39,9 @@ public class Product {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false)
-    private String category;
+    private CategoryType category;
 
     @Column(name = "price", nullable = false)
     private Integer price;
@@ -70,11 +81,11 @@ public class Product {
         this.name = name;
     }
 
-    public String getCategory() {
+    public CategoryType getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(CategoryType category) {
         this.category = category;
     }
 

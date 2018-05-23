@@ -12,6 +12,11 @@ import java.util.List;
 @Table(name = "user")
 public class User {
 
+    public enum RoleTypes {
+        USER,
+        ADMIN
+    }
+
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name ="id", nullable = false)
@@ -30,6 +35,10 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private RoleTypes roleType;
+
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
@@ -39,7 +48,7 @@ public class User {
     @Column(name = "nick_name", nullable = false)
     private String nickName;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
     @Column(name = "date_of_birth", nullable = false)
@@ -79,6 +88,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public RoleTypes getRoleType() {
+        return roleType;
+    }
+
+    public void setRoleType(RoleTypes roleType) {
+        this.roleType = roleType;
     }
 
     public String getFirstName() {
@@ -128,4 +145,34 @@ public class User {
     public void setGender(Boolean gender) {
         this.gender = gender;
     }
+
+    /*
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        long result = 1;
+        result = prime * result + id;
+        result = prime * result + ((ssoId == null) ? 0 : ssoId.hashCode());
+        return (int)result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof User))
+            return false;
+        User other = (User) obj;
+        if (id != other.id)
+            return false;
+        if (ssoId == null) {
+            if (other.ssoId != null)
+                return false;
+        } else if (!ssoId.equals(other.ssoId))
+            return false;
+        return true;
+    }
+    */
 }
