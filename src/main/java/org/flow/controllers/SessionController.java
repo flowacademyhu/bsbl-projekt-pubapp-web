@@ -50,9 +50,7 @@ public class SessionController {
         return ResponseEntity.ok("LOGGED OUT");
     }
 
-    @GetMapping
-    @PostMapping
-    @PutMapping
+    @RequestMapping
     public void stayingALive(@RequestHeader String token) {
         Date date = new Date();
         if(sessionRepository.findByToken(token).getExpiration().before(date)) {
