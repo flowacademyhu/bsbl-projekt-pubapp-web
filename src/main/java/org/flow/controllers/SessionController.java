@@ -38,7 +38,6 @@ public class SessionController {
             session.setExpiration(date);
             sessionRepository.save(session);
             return ResponseEntity.ok(token);
-
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }

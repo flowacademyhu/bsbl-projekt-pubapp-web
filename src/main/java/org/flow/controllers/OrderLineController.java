@@ -56,7 +56,6 @@ public class OrderLineController {
         newOrderLine.setQuantity(quantity);
         orderLineRepository.save(newOrderLine);
         return newOrderLine;
-
     }
 
     //update orderLine

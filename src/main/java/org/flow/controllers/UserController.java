@@ -53,30 +53,6 @@ public class UserController {
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-
-    }
-
-    @GetMapping(path= "/{id}/user_achievements")
-    public @ResponseBody ResponseEntity getUserAchievemnets(@PathVariable("id") Long id, HttpServletRequest httpServletRequest) {
-        if(checkUser(id, httpServletRequest)) {
-            Iterable<UserAchievement> allUserAchievements = userAchievementRepository.findAll();
-            Iterable<Achievement> allAchievements = achievementRepository.findAll();
-            List<UserAchievement> userAchievements = new ArrayList<>();
-            List<Optional<Achievement>> achievements = new ArrayList<>();
-            for(UserAchievement userAchievement : allUserAchievements) {
-                if(userAchievement.getUser().getId().equals(userRepository.findById(id).get().getId())) {
-                    userAchievements.add(userAchievement);
-                }
-            }
-            for(UserAchievement userAchievement : userAchievements) {
-                achievements.add(achievementRepository.findById(userAchievement.getAchievement().getId()));
-
-            }
-            Iterable<Optional<Achievement>> ownAchievements = achievements;
-            return ResponseEntity.ok(ownAchievements);
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
     }
 
 
@@ -96,6 +72,7 @@ public class UserController {
         newUser.setEmail(email);
         newUser.setDob(dob);
         newUser.setGender(gender);
+        newUser.setRoleType(User.RoleTypes.valueOf("USER"));
         userRepository.save(newUser);
         return ResponseEntity.ok(newUser);
     }
@@ -141,6 +118,5 @@ public class UserController {
     public boolean checkUser(Long id, HttpServletRequest httpServletRequest) {
         String token = httpServletRequest.getHeader("Authentication");
         return sessionRepository.findByToken(token).getUser().getId() == id;
-
     }
 }
