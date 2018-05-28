@@ -1,41 +1,77 @@
-import React from 'react';
-import {FormGroup, Form, Col, FormControl, Checkbox, Button, ControlLabel} from 'react-bootstrap';
+import React, { Component } from 'react';
+import FormFields from './widgets/forms/FormFields';
+import axios from 'axios'
 
-export default class Login extends React.Component {
-  render () {
-    return (
-      <div> <Form horizontal>
-        <FormGroup controlId='formHorizontalEmail'>
-          <Col componentClass={ControlLabel} sm={2}>
-            Email
-          </Col>
-          <Col sm={10}>
-            <FormControl type='email' placeholder='Email' />
-          </Col>
-        </FormGroup>
+class User extends Component {
 
-        <FormGroup controlId='formHorizontalPassword'>
-          <Col componentClass={ControlLabel} sm={2}>
-            Password
-          </Col>
-          <Col sm={10}>
-            <FormControl type='password' placeholder='Password' />
-          </Col>
-        </FormGroup>
+    state = {
+        formData:{
+            email:{
+                element:'input',
+                value:'',
+                label:true,
+                labelText:'Email',
+                config:{
+                    name:'email_input',
+                    type:'text',
+                    placeholder:'Enter your email'
+                }
+            },
+            password:{
+                element:'input',
+                value:'',
+                label:true,
+                labelText:'Password',
+                config:{
+                    name:'password_input',
+                    type:'password',
+                    placeholder:'Enter your password'
+                }
+            },
+        }
+        
+    }
 
-        <FormGroup>
-          <Col smOffset={2} sm={10}>
-            <Checkbox>Remember me</Checkbox>
-          </Col>
-        </FormGroup>
+    updateForm = (newState) => {
+        this.setState({
+            formData:newState
+        })
+      
+    }
+    submitForm = (event) => {
+        event.preventDefault();
+        let dataToSubmit = {};
+        for(let key in this.state.formData){
+            dataToSubmit[key] = this.state.formData[key].value;
+        }
+        console.log(dataToSubmit)
+       // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
+        axios.post('/login', {
+            email: dataToSubmit.email.value,
+            password: dataToSubmit.password.value
+          })
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+    }
 
-        <FormGroup>
-          <Col smOffset={2} sm={10}>
-            <Button type='submit'>Sign in</Button>
-          </Col>
-        </FormGroup>
-      </Form>;
-      </div>
-    );
-  }
+    render(){
+        return(
+            <div className='container'>
+                <form onSubmit={this.submitForm}>
+                    <FormFields
+                        formData={this.state.formData}
+                        change={(newState) => this.updateForm(newState)}
+                    />
+                
+                <button type='submit'>Submit</button>
+                </form>
+            </div>
+        )
+    }
 }
+
+export default User;

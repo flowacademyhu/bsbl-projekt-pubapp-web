@@ -11,11 +11,13 @@ import Products from './routes/Products';
 import Users from './routes/Users';
 import Registration from './routes/Registration';
 import NotFound from './routes/NotFound';
+import MyForm from './routes/Myform';
  
 const Router = () => (
   <BrowserRouter>
     <div>
       <Switch>
+        <Route path='/myfrom' component={MyForm} />
         <Route path='/registration' component={Registration} />
         <Route path='/login' component={Login} />
         <Route path='/achivement' component={Achivement} />
