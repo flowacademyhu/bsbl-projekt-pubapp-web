@@ -46,7 +46,7 @@ class User extends Component {
         }
         console.log(dataToSubmit)
        // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
-        axios.post('/login', {
+        axios.post('/sessions', {
             email: dataToSubmit.email.value,
             password: dataToSubmit.password.value
           })
