@@ -15,7 +15,7 @@ export default class Home extends React.Component {
             <li> app store link <a href='asdasdasd'>click me </a> </li>
           </ul>
           <Link to='/login' >Sign in</Link>
-          <Link to='/registration' >Registration</Link>
+          <Link to='/achivements' >Registration</Link>
         </Jumbotron>
       </div>
     );

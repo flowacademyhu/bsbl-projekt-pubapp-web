@@ -60,3 +60,7 @@ select {
     font-weight: 600;
     margin-top: 10px;
 }
+
+p {
+    color: red;
+}
