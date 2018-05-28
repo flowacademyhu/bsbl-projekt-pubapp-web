@@ -2,6 +2,7 @@ package org.flow.controllers;
 
 
 import com.google.common.net.HttpHeaders;
+import io.swagger.annotations.ApiParam;
 import org.flow.models.Achievement;
 import org.flow.models.User;
 import org.flow.models.UserAchievement;
@@ -117,6 +118,7 @@ public class UserController {
 
     public boolean checkUser(Long id, HttpServletRequest httpServletRequest) {
         String token = httpServletRequest.getHeader("Authentication");
+        //httpServletRequest.getParameter("Authentication");
         return sessionRepository.findByToken(token).getUser().getId() == id;
     }
 }

@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path="/")
+@RequestMapping(path="/sessions")
 public class SessionController {
 
     @Autowired
@@ -24,7 +24,7 @@ public class SessionController {
     @Autowired
     private SessionRepository sessionRepository;
 
-    @PostMapping(path="login")
+    @PostMapping(path="/")
     public @ResponseBody ResponseEntity login(@RequestParam String email, @RequestParam String password) {
         User loggedUser = userRepository.findByEmail(email);
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -43,7 +43,7 @@ public class SessionController {
         }
     }
 
-    @DeleteMapping(path="users/{id}/logout")
+    @DeleteMapping(path="/{id}")
     public @ResponseBody ResponseEntity logout(@PathVariable("id") Long id, @RequestHeader String token) {
         sessionRepository.delete(sessionRepository.findByToken(token));
         return ResponseEntity.ok("LOGGED OUT");
