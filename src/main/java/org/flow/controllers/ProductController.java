@@ -33,7 +33,7 @@ public class ProductController {
     public @ResponseBody Product addNewProduct (@RequestParam String name, @RequestParam String category, @RequestParam int price, @RequestParam int xp_value) {
         Product newProduct = new Product();
         newProduct.setName(name);
-        newProduct.setCategory(category);
+        newProduct.setCategory(Product.CategoryType.valueOf(category));
         newProduct.setPrice(price);
         newProduct.setXpValue(xp_value);
         productRepository.save(newProduct);
@@ -45,7 +45,7 @@ public class ProductController {
     public @ResponseBody Product updateProduct (@PathVariable("id") Long id, @RequestParam String name, @RequestParam String category, @RequestParam int price, @RequestParam int xp_value) {
         Product updatedProduct = productRepository.findById(id).get();
         updatedProduct.setName(name);
-        updatedProduct.setCategory(category);
+        updatedProduct.setCategory(Product.CategoryType.valueOf(category));
         updatedProduct.setPrice(price);
         updatedProduct.setXpValue(xp_value);
         productRepository.save(updatedProduct);
