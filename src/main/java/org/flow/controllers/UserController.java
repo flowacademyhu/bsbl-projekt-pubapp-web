@@ -61,7 +61,7 @@ public class UserController {
     public @ResponseBody ResponseEntity addNewUser (@RequestParam String firstName, @RequestParam String lastName,
                                           @RequestParam String nickName, @RequestParam String password,
                                           @RequestParam String email, @RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") Date dob,
-                                          @RequestParam Boolean gender, HttpServletRequest httpServletRequest) {
+                                          @RequestParam Boolean gender, @RequestParam String role, HttpServletRequest httpServletRequest) {
         User newUser = new User();
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String hashedPassword = passwordEncoder.encode(password);
@@ -72,7 +72,7 @@ public class UserController {
         newUser.setEmail(email);
         newUser.setDob(dob);
         newUser.setGender(gender);
-        newUser.setRoleType(User.RoleTypes.valueOf("USER"));
+        newUser.setRoleType(User.RoleTypes.valueOf(role));
         userRepository.save(newUser);
         return ResponseEntity.ok(newUser);
     }

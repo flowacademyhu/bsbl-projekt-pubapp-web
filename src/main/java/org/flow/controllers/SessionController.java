@@ -10,25 +10,41 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
+import org.json.JSONObject;
+
 
 @RestController
-@RequestMapping(path="/")
+@RequestMapping(path="/sessions")
 public class SessionController {
+
+    private class Userinfo {
+        private String password;
+        private String email;
+
+        public String getPassword() {
+            return password;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+    }
 
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private SessionRepository sessionRepository;
 
-    @PostMapping(path="login")
-    public @ResponseBody ResponseEntity login(@RequestParam String email, @RequestParam String password) {
-        User loggedUser = userRepository.findByEmail(email);
+    @PostMapping(path="/")
+                                                //{ email: email, password: pass }
+    public @ResponseBody ResponseEntity login(@RequestBody Userinfo user) {
+System.out.println("trytologin");
+        User loggedUser = userRepository.findByEmail(user.getEmail());
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        if(passwordEncoder.matches(password, loggedUser.getPassword())) {
+        if(passwordEncoder.matches(user.getPassword(), loggedUser.getPassword())) {
+System.out.println("authenticationok");
             String token = UUID.randomUUID().toString();
             Session session = new Session();
             session.setToken(token);
@@ -39,11 +55,12 @@ public class SessionController {
             sessionRepository.save(session);
             return ResponseEntity.ok(token);
         } else {
+System.out.println("cantauthenticate");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 
-    @DeleteMapping(path="users/{id}/logout")
+    @DeleteMapping(path="/{id}/")
     public @ResponseBody ResponseEntity logout(@PathVariable("id") Long id, @RequestHeader String token) {
         sessionRepository.delete(sessionRepository.findByToken(token));
         return ResponseEntity.ok("LOGGED OUT");
