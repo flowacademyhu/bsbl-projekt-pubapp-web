@@ -1,9 +1,18 @@
 import React from 'react';
+import AchivementsLine from './Achivements/AchivementsLine';
 
-export default class Achivements extends React.Component {
+class Achivements extends React.Component {
+  submit (inputValue) {
+    console.log(inputValue);
+    this.props.submit(inputValue);
+  }
+
   render () {
     return (
-        <div> Achivements</div>
+      <div className='createItemWrapper'>
+        <AchivementsLine submit={this.submit.bind(this)} />
+      </div>
     );
   }
 }
+export default Achivements;
