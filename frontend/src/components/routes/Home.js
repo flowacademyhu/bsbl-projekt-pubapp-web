@@ -1,5 +1,4 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
 import {Jumbotron} from 'react-bootstrap';
 
 export default class Home extends React.Component {
@@ -8,14 +7,9 @@ export default class Home extends React.Component {
       <div>
         <Jumbotron>
           <h1>Welcome </h1>
-          <h2> Orgiginal PubAPP </h2>
+          <h2> to the admin home page </h2>
 
-          <ul>
-            <li> gooogle play  link <a href='asdasdasd'> click me </a>  </li>
-            <li> app store link <a href='asdasdasd'>click me </a> </li>
-          </ul>
-          <Link to='/login' >Sign in</Link>
-          <Link to='/achivements' >Registration</Link>
+
         </Jumbotron>
       </div>
     );
