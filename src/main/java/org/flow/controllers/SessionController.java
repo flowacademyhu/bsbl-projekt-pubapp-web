@@ -4,46 +4,36 @@ import org.flow.models.Session;
 import org.flow.models.User;
 import org.flow.repositories.SessionRepository;
 import org.flow.repositories.UserRepository;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.UUID;
-import org.json.JSONObject;
 
 
 @RestController
 @RequestMapping(path="/sessions")
 public class SessionController {
 
-    private class Userinfo {
-        private String password;
-        private String email;
-
-        public String getPassword() {
-            return password;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-    }
-
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private SessionRepository sessionRepository;
 
-    @PostMapping(path="/")
-                                                //{ email: email, password: pass }
-    public @ResponseBody ResponseEntity login(@RequestBody Userinfo user) {
+    @PostMapping
+    public @ResponseBody ResponseEntity login(User login) {
 System.out.println("trytologin");
-        User loggedUser = userRepository.findByEmail(user.getEmail());
+        System.out.println(login);
+        System.out.println(login.getEmail());
+        User loggedUser = userRepository.findByEmail(login.getEmail());
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        if(passwordEncoder.matches(user.getPassword(), loggedUser.getPassword())) {
+        if(passwordEncoder.matches(login.getPassword(), loggedUser.getPassword())) {
 System.out.println("authenticationok");
             String token = UUID.randomUUID().toString();
             Session session = new Session();
@@ -56,16 +46,17 @@ System.out.println("authenticationok");
             return ResponseEntity.ok(token);
         } else {
 System.out.println("cantauthenticate");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("asd");
         }
     }
 
-    @DeleteMapping(path="/{id}/")
+    @DeleteMapping(path="/{id}")
     public @ResponseBody ResponseEntity logout(@PathVariable("id") Long id, @RequestHeader String token) {
         sessionRepository.delete(sessionRepository.findByToken(token));
         return ResponseEntity.ok("LOGGED OUT");
     }
 
+    /*
     @RequestMapping
     public void stayingALive(@RequestHeader String token) {
         Date date = new Date();
@@ -76,4 +67,5 @@ System.out.println("cantauthenticate");
             sessionRepository.findByToken(token).setExpiration(date);
         }
     }
+    */
 }
