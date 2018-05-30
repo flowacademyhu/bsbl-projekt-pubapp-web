@@ -6,7 +6,9 @@ import org.flow.models.Product;
 import org.flow.repositories.OrderLineRepository;
 import org.flow.repositories.OrderingRepository;
 import org.flow.repositories.ProductRepository;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -27,7 +29,7 @@ public class OrderLineController {
 
     //get all orderLines for the current ordering
     @GetMapping(path="/{id}/orderlines")
-    public @ResponseBody Iterable<OrderLine> findOrderLines (@PathVariable("id") Long id) {
+    public @ResponseBody ResponseEntity findOrderLines (@PathVariable("id") Long id) {
         Iterable<OrderLine> allOrderLines = orderLineRepository.findAll();
         List<OrderLine> orderLineList = new ArrayList<>();
         for (OrderLine orderLine : allOrderLines) {
@@ -36,43 +38,45 @@ public class OrderLineController {
             }
         }
         Iterable<OrderLine> lines = orderLineList;
-        return lines;
+        return ResponseEntity.ok(lines);
     }
 
 
     //get orderLine by ID
     @GetMapping(path="/{id}/orderlines/{id2}")
-    public @ResponseBody OrderLine getOrderLineById (@PathVariable("id") Long id, @PathVariable("id2") Long id2) {
+    public @ResponseBody ResponseEntity getOrderLineById (@PathVariable("id") Long id, @PathVariable("id2") Long id2) {
         Optional<OrderLine> orderLine = orderLineRepository.findById(id2);
-        return orderLine.get();
+        return ResponseEntity.ok(orderLine);
     }
 
     //create new orderLine
-    @PostMapping(path="/{id}/orderlines/")
-    public @ResponseBody OrderLine addNewOrderLine (@PathVariable("id") Long orderId, @RequestParam String product_id, @RequestParam int quantity) {
+    @PostMapping(path="/{id}/orderlines")
+    public @ResponseBody ResponseEntity addNewOrderLine (@PathVariable("id") Long orderId, @RequestBody String orderLine) {
         OrderLine newOrderLine = new OrderLine();
+        JSONObject jsonObject = new JSONObject(orderLine);
         newOrderLine.setOrdering(orderingRepository.findById(orderId).get());
-        newOrderLine.setProduct(productRepository.findByName(product_id));
-        newOrderLine.setQuantity(quantity);
+        newOrderLine.setProduct(productRepository.findByName(jsonObject.getString("productName")));
+        newOrderLine.setQuantity(jsonObject.getInt("quantity"));
         orderLineRepository.save(newOrderLine);
-        return newOrderLine;
+        return ResponseEntity.ok(newOrderLine);
     }
 
     //update orderLine
     @PutMapping(path="/{id}/orderlines/{id2}")
-    public @ResponseBody OrderLine updateOrderLine (@PathVariable("id2") Long id, @RequestParam Product product_id, @RequestParam int quantity) {
+    public @ResponseBody ResponseEntity updateOrderLine (@PathVariable("id2") Long id, @RequestBody String orderLine) {
         OrderLine updatedOrderLine = orderLineRepository.findById(id).get();
-        updatedOrderLine.setProduct(product_id);
-        updatedOrderLine.setQuantity(quantity);
+        JSONObject jsonObject = new JSONObject(orderLine);
+        updatedOrderLine.setProduct(productRepository.findByName(jsonObject.getString("productName")));
+        updatedOrderLine.setQuantity(jsonObject.getInt("quantity"));
         orderLineRepository.save(updatedOrderLine);
-        return updatedOrderLine;
+        return ResponseEntity.ok(updatedOrderLine);
     }
 
 
     //delete orderLine by ID
     @DeleteMapping(path = "/{id}/orderlines/{id2}")
-    public @ResponseBody Iterable<OrderLine> deleteOrderLine (@PathVariable("id") Long orderId, @PathVariable("id2") Long id) {
+    public @ResponseBody ResponseEntity deleteOrderLine (@PathVariable("id") Long orderId, @PathVariable("id2") Long id) {
         orderLineRepository.deleteById(id);
-        return orderLineRepository.findAll();
+        return ResponseEntity.ok(orderLineRepository.findAll());
     }
 }

@@ -59,6 +59,7 @@ class Login extends Component {
     let dataToSubmit = { email: this.state.formData.email.value, password: this.state.formData.password.value };
     console.log(dataToSubmit);
     let data = JSON.stringify(dataToSubmit);
+
     axios.defaults.headers.post['Content-Type'] = 'application/json';
     axios.post('http://127.0.0.1:8080/sessions', data, {
       headers: {
@@ -110,6 +111,5 @@ class Login extends Component {
       </div>
     )
   }
-
 }
 export default Login;

@@ -23,10 +23,11 @@ public class AcheivementControllerTest {
         MockitoAnnotations.initMocks(this);
         this.mockMvc = MockMvcBuilders.standaloneSetup(achievementController).build();
     }
-
+    /*
     @Test
     public void getAchievement() throws Exception {
         this.mockMvc.perform(get("/achievement/{id}", 1))
                 .andExpect(status().isOk());
     }
+    */
 }
