@@ -63,9 +63,10 @@ class User extends Component {
     //console.log(data);
     // {"email":"value", "password":"value"}
     axios.defaults.headers.post['Content-Type'] = 'application/json';
-    axios.post('localhost:8080/sessions', dataToSubmit, {
+    axios.post('http://127.0.0.1:8080/sessions', data, {
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
         'Access-Control-Allow-Origin': '*'
       }
     })

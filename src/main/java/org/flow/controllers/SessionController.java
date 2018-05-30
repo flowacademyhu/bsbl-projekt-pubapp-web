@@ -27,13 +27,15 @@ public class SessionController {
     private SessionRepository sessionRepository;
 
     @PostMapping
-    public @ResponseBody ResponseEntity login(User login) {
+    public @ResponseBody ResponseEntity login(@RequestBody String str) {
 System.out.println("trytologin");
-        System.out.println(login);
-        System.out.println(login.getEmail());
-        User loggedUser = userRepository.findByEmail(login.getEmail());
+        System.out.println(str);
+        JSONObject jsonObject = new JSONObject(str);
+        //System.out.println(login.toString());
+        //System.out.println(login.getString("email"));
+        User loggedUser = userRepository.findByEmail(jsonObject.getString("email"));
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        if(passwordEncoder.matches(login.getPassword(), loggedUser.getPassword())) {
+        if(passwordEncoder.matches(jsonObject.getString("password"), loggedUser.getPassword())) {
 System.out.println("authenticationok");
             String token = UUID.randomUUID().toString();
             Session session = new Session();
