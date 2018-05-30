@@ -35,7 +35,7 @@ public class UserControllerTest {
 
     @Test
     public void createUser() throws Exception {
-        this.mockMvc.perform(post("/users/")
+        this.mockMvc.perform(post("/users")
                 .param("firstName", "John")
                 .param("lastName", "Doe")
                 .param("password", "123456")

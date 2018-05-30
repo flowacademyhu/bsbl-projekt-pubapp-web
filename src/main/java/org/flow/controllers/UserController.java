@@ -51,11 +51,11 @@ public class UserController {
             Optional<User> user = userRepository.findById(id);
             if (!user.isPresent()) {
                 //throw new UserNotFoundException("User not found.");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found.");
             }
             return ResponseEntity.ok(user);
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
         }
     }
 
@@ -65,6 +65,13 @@ public class UserController {
     public @ResponseBody ResponseEntity addNewUser (@RequestBody String user) {
         User newUser = new User();
         JSONObject jsonObject = new JSONObject(user);
+        System.out.println(jsonObject.getString("firstName"));
+        System.out.println(jsonObject.getString("lastName"));
+        System.out.println(jsonObject.getString("password"));
+        System.out.println(jsonObject.getString("nickName"));
+        System.out.println(jsonObject.getString("email"));
+        System.out.println(jsonObject.getString("dob"));
+        System.out.println(jsonObject.getBoolean("gender"));
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String hashedPassword = passwordEncoder.encode(jsonObject.getString("password"));
         newUser.setPassword(hashedPassword);
@@ -109,7 +116,7 @@ public class UserController {
             userRepository.save(updatedUser);
             return ResponseEntity.ok(updatedUser);
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
         }
 
     }
@@ -121,7 +128,7 @@ public class UserController {
             userRepository.deleteById(id);
             return ResponseEntity.ok(userRepository.findAll());
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
         }
 
     }
