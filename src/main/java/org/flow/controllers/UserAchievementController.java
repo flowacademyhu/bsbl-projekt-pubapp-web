@@ -36,8 +36,8 @@ public class UserAchievementController {
 
     @GetMapping(path= "/{id}/user_achievements")
     public @ResponseBody
-    ResponseEntity getUserAchievemnets(@PathVariable("id") Long id, HttpServletRequest httpServletRequest) {
-        if(userController.checkUser(id, httpServletRequest)) {
+    ResponseEntity getUserAchievemnets(@PathVariable("id") Long id, @RequestHeader String token) {
+        if(userController.checkUser(id, token)) {
             Iterable<UserAchievement> allUserAchievements = userAchievementRepository.findAll();
             List<UserAchievement> userAchievements = new ArrayList<>();
             List<Optional<Achievement>> achievements = new ArrayList<>();

@@ -46,8 +46,8 @@ public class UserController {
 
     //get user by ID
     @GetMapping(path = "/{id}")
-    public @ResponseBody ResponseEntity getUserById (@PathVariable("id") Long id, HttpServletRequest httpServletRequest)  throws UserNotFoundException {
-        if(checkUser(id, httpServletRequest)) {
+    public @ResponseBody ResponseEntity getUserById (@PathVariable("id") Long id, @RequestHeader String token)  throws UserNotFoundException {
+        if(checkUser(id, token)) {
             Optional<User> user = userRepository.findById(id);
             if (!user.isPresent()) {
                 //throw new UserNotFoundException("User not found.");
@@ -65,37 +65,34 @@ public class UserController {
     public @ResponseBody ResponseEntity addNewUser (@RequestBody String user) {
         User newUser = new User();
         JSONObject jsonObject = new JSONObject(user);
-        System.out.println(jsonObject.getString("firstName"));
-        System.out.println(jsonObject.getString("lastName"));
-        System.out.println(jsonObject.getString("password"));
-        System.out.println(jsonObject.getString("nickName"));
-        System.out.println(jsonObject.getString("email"));
-        System.out.println(jsonObject.getString("dob"));
-        System.out.println(jsonObject.getBoolean("gender"));
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String hashedPassword = passwordEncoder.encode(jsonObject.getString("password"));
-        newUser.setPassword(hashedPassword);
-        newUser.setFirstName(jsonObject.getString("firstName"));
-        newUser.setLastName(jsonObject.getString("lastName"));
-        newUser.setNickName(jsonObject.getString("nickName"));
-        newUser.setEmail(jsonObject.getString("email"));
-        Date dob = null;
-        try {
-            dob = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("dob"));
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if(userRepository.findByEmail(jsonObject.getString("email")) != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This e-mail address is already taken.");
+        } else {
+            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String hashedPassword = passwordEncoder.encode(jsonObject.getString("password"));
+            newUser.setPassword(hashedPassword);
+            newUser.setFirstName(jsonObject.getString(  "firstName"));
+            newUser.setLastName(jsonObject.getString("lastName"));
+            newUser.setNickName(jsonObject.getString("nickName"));
+            newUser.setEmail(jsonObject.getString("email"));
+            Date dob = null;
+            try {
+                dob = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("dob"));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            newUser.setDob(dob);
+            newUser.setGender(jsonObject.getBoolean("gender"));
+            newUser.setRoleType(User.RoleTypes.valueOf("USER"));
+            userRepository.save(newUser);
+            return ResponseEntity.ok(newUser);
         }
-        newUser.setDob(dob);
-        newUser.setGender(jsonObject.getBoolean("gender"));
-        newUser.setRoleType(User.RoleTypes.valueOf("USER"));
-        userRepository.save(newUser);
-        return ResponseEntity.ok(newUser);
     }
 
     //update user
     @PutMapping(path="/{id}")
-    public @ResponseBody ResponseEntity updateUser (@PathVariable("id") Long id, @RequestBody String user, HttpServletRequest httpServletRequest) {
-        if(checkUser(id, httpServletRequest)) {
+    public @ResponseBody ResponseEntity updateUser (@PathVariable("id") Long id, @RequestBody String user, @RequestHeader String token) {
+        if(checkUser(id, token)) {
             User updatedUser = userRepository.findById(id).get();
             JSONObject jsonObject = new JSONObject(user);
             PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -123,8 +120,8 @@ public class UserController {
 
     //delete user by ID
     @DeleteMapping(path = "/{id}")
-    public @ResponseBody ResponseEntity deleteUser (@PathVariable("id") Long id, HttpServletRequest httpServletRequest) {
-        if(checkUser(id, httpServletRequest)) {
+    public @ResponseBody ResponseEntity deleteUser (@PathVariable("id") Long id, @RequestHeader String token) {
+        if(checkUser(id, token)) {
             userRepository.deleteById(id);
             return ResponseEntity.ok(userRepository.findAll());
         } else {
@@ -133,8 +130,7 @@ public class UserController {
 
     }
 
-    public boolean checkUser(Long id, HttpServletRequest httpServletRequest) {
-        String token = httpServletRequest.getHeader("Authentication");
+    public boolean checkUser(Long id, String token) {
         return sessionRepository.findByToken(token).getUser().getId() == id;
     }
 }

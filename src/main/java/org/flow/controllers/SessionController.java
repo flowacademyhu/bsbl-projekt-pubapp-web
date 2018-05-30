@@ -37,7 +37,7 @@ public class SessionController {
             session.setToken(token);
             session.setUser(loggedUser);
             Date date = new Date();
-            date.setTime(date.getTime() + 1000000);
+            date.setTime(date.getTime() + 20000);
             session.setExpiration(date);
             sessionRepository.save(session);
             return ResponseEntity.ok(token);
@@ -52,16 +52,13 @@ public class SessionController {
         return ResponseEntity.ok("LOGGED OUT");
     }
 
-    /*
-    @RequestMapping
-    public void stayingALive(@RequestHeader String token) {
+    public void stayingALive(String token) {
         Date date = new Date();
         if(sessionRepository.findByToken(token).getExpiration().before(date)) {
             sessionRepository.delete(sessionRepository.findByToken(token));
         } else {
-            date.setTime(date.getTime() + 1000000);
+            date.setTime(date.getTime() + 20000);
             sessionRepository.findByToken(token).setExpiration(date);
         }
     }
-    */
 }
