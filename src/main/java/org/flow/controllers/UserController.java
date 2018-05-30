@@ -9,6 +9,7 @@ import org.flow.repositories.AchievementRepository;
 import org.flow.repositories.SessionRepository;
 import org.flow.repositories.UserAchievementRepository;
 import org.flow.repositories.UserRepository;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpRequest;
@@ -19,6 +20,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -37,8 +40,8 @@ public class UserController {
 
     //get all users
     @GetMapping(path="/")
-    public @ResponseBody Iterable<User> getAllUsers () {
-        return userRepository.findAll();
+    public @ResponseBody ResponseEntity getAllUsers () {
+        return ResponseEntity.ok(userRepository.findAll());
     }
 
     //get user by ID
@@ -47,7 +50,8 @@ public class UserController {
         if(checkUser(id, httpServletRequest)) {
             Optional<User> user = userRepository.findById(id);
             if (!user.isPresent()) {
-                throw new UserNotFoundException("User not found.");
+                //throw new UserNotFoundException("User not found.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
             }
             return ResponseEntity.ok(user);
         } else {
@@ -57,44 +61,51 @@ public class UserController {
 
 
     //create new user
-    @PostMapping(path="/")
-    public @ResponseBody ResponseEntity addNewUser (@RequestParam String firstName, @RequestParam String lastName,
-                                          @RequestParam String nickName, @RequestParam String password,
-                                          @RequestParam String email, @RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") Date dob,
-                                          @RequestParam Boolean gender, @RequestParam String role, HttpServletRequest httpServletRequest) {
+    @PostMapping
+    public @ResponseBody ResponseEntity addNewUser (@RequestBody String user) {
         User newUser = new User();
+        JSONObject jsonObject = new JSONObject(user);
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String hashedPassword = passwordEncoder.encode(password);
+        String hashedPassword = passwordEncoder.encode(jsonObject.getString("password"));
         newUser.setPassword(hashedPassword);
-        newUser.setFirstName(firstName);
-        newUser.setLastName(lastName);
-        newUser.setNickName(nickName);
-        newUser.setEmail(email);
+        newUser.setFirstName(jsonObject.getString("firstName"));
+        newUser.setLastName(jsonObject.getString("lastName"));
+        newUser.setNickName(jsonObject.getString("nickName"));
+        newUser.setEmail(jsonObject.getString("email"));
+        Date dob = null;
+        try {
+            dob = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("dob"));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         newUser.setDob(dob);
-        newUser.setGender(gender);
-        newUser.setRoleType(User.RoleTypes.valueOf(role));
+        newUser.setGender(jsonObject.getBoolean("gender"));
+        newUser.setRoleType(User.RoleTypes.valueOf("USER"));
         userRepository.save(newUser);
         return ResponseEntity.ok(newUser);
     }
 
     //update user
     @PutMapping(path="/{id}")
-    public @ResponseBody ResponseEntity updateUser (@PathVariable("id") Long id, @RequestParam String firstName,
-                                          @RequestParam String lastName, @RequestParam String nickName,
-                                          @RequestParam String password, @RequestParam String email,
-                                          @RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") Date dob,
-                                          @RequestParam Boolean gender, HttpServletRequest httpServletRequest) {
+    public @ResponseBody ResponseEntity updateUser (@PathVariable("id") Long id, @RequestBody String user, HttpServletRequest httpServletRequest) {
         if(checkUser(id, httpServletRequest)) {
             User updatedUser = userRepository.findById(id).get();
+            JSONObject jsonObject = new JSONObject(user);
             PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            String hashedPassword = passwordEncoder.encode(password);
+            String hashedPassword = passwordEncoder.encode(jsonObject.getString("password"));
             updatedUser.setPassword(hashedPassword);
-            updatedUser.setFirstName(firstName);
-            updatedUser.setLastName(lastName);
-            updatedUser.setNickName(nickName);
-            updatedUser.setEmail(email);
+            updatedUser.setFirstName(jsonObject.getString("firstName"));
+            updatedUser.setLastName(jsonObject.getString("lastName"));
+            updatedUser.setNickName(jsonObject.getString("nickName"));
+            updatedUser.setEmail(jsonObject.getString("email"));
+            Date dob = null;
+            try {
+                dob = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("dob"));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             updatedUser.setDob(dob);
-            updatedUser.setGender(gender);
+            updatedUser.setGender(jsonObject.getBoolean("gender"));
             userRepository.save(updatedUser);
             return ResponseEntity.ok(updatedUser);
         } else {

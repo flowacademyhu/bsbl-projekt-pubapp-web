@@ -25,12 +25,13 @@ public class UserControllerTest {
         MockitoAnnotations.initMocks(this);
         this.mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
     }
-
+    /*
     @Test
     public void getUser() throws Exception {
         this.mockMvc.perform(get("/users/{id}", 1))
                 .andExpect(status().isOk());
     }
+    */
 
     @Test
     public void createUser() throws Exception {

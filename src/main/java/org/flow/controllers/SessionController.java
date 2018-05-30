@@ -27,16 +27,11 @@ public class SessionController {
     private SessionRepository sessionRepository;
 
     @PostMapping
-    public @ResponseBody ResponseEntity login(@RequestBody String str) {
-System.out.println("trytologin");
-        System.out.println(str);
-        JSONObject jsonObject = new JSONObject(str);
-        //System.out.println(login.toString());
-        //System.out.println(login.getString("email"));
+    public @ResponseBody ResponseEntity login(@RequestBody String login) {
+        JSONObject jsonObject = new JSONObject(login);
         User loggedUser = userRepository.findByEmail(jsonObject.getString("email"));
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         if(passwordEncoder.matches(jsonObject.getString("password"), loggedUser.getPassword())) {
-System.out.println("authenticationok");
             String token = UUID.randomUUID().toString();
             Session session = new Session();
             session.setToken(token);
@@ -47,8 +42,7 @@ System.out.println("authenticationok");
             sessionRepository.save(session);
             return ResponseEntity.ok(token);
         } else {
-System.out.println("cantauthenticate");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("asd");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 
