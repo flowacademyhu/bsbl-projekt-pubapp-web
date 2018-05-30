@@ -28,14 +28,15 @@ public class OrderingController {
     }
 
     //create new ordering
-    @PostMapping(path="/")
-    public @ResponseBody Ordering addNewOrdering (@RequestParam String qrCodePath) {
+    @PostMapping
+    public @ResponseBody ResponseEntity addNewOrdering () {
         Ordering newOrdering = new Ordering();
-        newOrdering.setQrCodePath(qrCodePath);
+        newOrdering.setQrCodePath("qrCodePath");
         orderingRepository.save(newOrdering);
-        return newOrdering;
+        return ResponseEntity.ok(newOrdering);
     }
 
+    /*
     //update ordering
     @PutMapping(path="/{id}")
     public @ResponseBody Ordering updateOrdering (@PathVariable("id") Long id) {
@@ -43,13 +44,14 @@ public class OrderingController {
         orderingRepository.save(updatedOrdering);
         return updatedOrdering;
     }
+    */
 
 
     //delete ordering by ID
     @DeleteMapping(path = "/{id}")
-    public @ResponseBody Iterable<Ordering> deleteORdering (@PathVariable("id") Long id) {
+    public @ResponseBody ResponseEntity deleteORdering (@PathVariable("id") Long id) {
         orderingRepository.deleteById(id);
-        return orderingRepository.findAll();
+        return ResponseEntity.ok(orderingRepository.findAll());
     }
 
 }

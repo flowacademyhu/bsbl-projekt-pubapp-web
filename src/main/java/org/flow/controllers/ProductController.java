@@ -2,8 +2,10 @@ package org.flow.controllers;
 
 import org.flow.models.Product;
 import org.flow.repositories.ProductRepository;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -16,46 +18,48 @@ public class ProductController {
     private ProductRepository productRepository;
 
     //get all products
-    @GetMapping(path="/")
-    public @ResponseBody Iterable<Product> findAllProducts () {
-        return productRepository.findAll();
+    @GetMapping
+    public @ResponseBody ResponseEntity findAllProducts () {
+        return ResponseEntity.ok(productRepository.findAll());
     }
 
-        // get product by ID
+    // get product by ID
     @GetMapping(path="/{id}")
-    public @ResponseBody Product getProductById (@PathVariable("id") Long id) {
+    public @ResponseBody ResponseEntity getProductById (@PathVariable("id") Long id) {
         Optional<Product> product = productRepository.findById(id);
-        return product.get();
+        return ResponseEntity.ok(product);
     }
 
      //create new product
-    @PostMapping(path="/")
-    public @ResponseBody Product addNewProduct (@RequestParam String name, @RequestParam String category, @RequestParam int price, @RequestParam int xp_value) {
+    @PostMapping
+    public @ResponseBody ResponseEntity addNewProduct (@RequestBody String product) {
+        JSONObject jsonObject = new JSONObject(product);
         Product newProduct = new Product();
-        newProduct.setName(name);
-        newProduct.setCategory(Product.CategoryType.valueOf(category));
-        newProduct.setPrice(price);
-        newProduct.setXpValue(xp_value);
+        newProduct.setName(jsonObject.getString("name"));
+        newProduct.setCategory(Product.CategoryType.valueOf(jsonObject.getString("category")));
+        newProduct.setPrice(jsonObject.getInt("price"));
+        newProduct.setXpValue(jsonObject.getInt("xpValue"));
         productRepository.save(newProduct);
-        return newProduct;
+        return ResponseEntity.ok(newProduct);
     }
 
     // update product
     @PutMapping(path="/{id}")
-    public @ResponseBody Product updateProduct (@PathVariable("id") Long id, @RequestParam String name, @RequestParam String category, @RequestParam int price, @RequestParam int xp_value) {
+    public @ResponseBody ResponseEntity updateProduct (@PathVariable("id") Long id, @RequestBody String product) {
+        JSONObject jsonObject = new JSONObject(product);
         Product updatedProduct = productRepository.findById(id).get();
-        updatedProduct.setName(name);
-        updatedProduct.setCategory(Product.CategoryType.valueOf(category));
-        updatedProduct.setPrice(price);
-        updatedProduct.setXpValue(xp_value);
+        updatedProduct.setName(jsonObject.getString("name"));
+        updatedProduct.setCategory(Product.CategoryType.valueOf(jsonObject.getString("category")));
+        updatedProduct.setPrice(jsonObject.getInt("price"));
+        updatedProduct.setXpValue(jsonObject.getInt("xpValue"));
         productRepository.save(updatedProduct);
-        return updatedProduct;
+        return ResponseEntity.ok(updatedProduct);
     }
 
     //delete product by ID
     @DeleteMapping(path="/{id}")
-    public @ResponseBody Iterable<Product> deleteProduct (@PathVariable("id") Long id) {
+    public @ResponseBody ResponseEntity deleteProduct (@PathVariable("id") Long id) {
         productRepository.deleteById(id);
-        return productRepository.findAll();
+        return ResponseEntity.ok(productRepository.findAll());
     }
 }
