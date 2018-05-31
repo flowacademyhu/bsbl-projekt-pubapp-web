@@ -80,6 +80,26 @@ const FormFields = (props) => {
           </div>
         );
         break;
+      case ('select'):
+        formTemplate = (
+          <div>
+            {showLabel(values.label, values.labelText)}
+            <select
+              value={values.value}
+              name={values.config.name}
+              onChange={
+                (event) => changeHandler(event, data.id)
+              }
+            >
+              {values.config.options.map((item, i) => (
+                <option key={i} value={item.val}>
+                  {item.text}
+                </option>
+              ))}
+            </select>
+          </div>
+        );
+        break;
       default:
         formTemplate = null;
     }

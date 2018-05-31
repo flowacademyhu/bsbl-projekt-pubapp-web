@@ -4,7 +4,6 @@ package org.flow.controllers;
 import com.google.common.net.HttpHeaders;
 import org.flow.models.Achievement;
 import org.flow.models.User;
-import org.flow.models.UserAchievement;
 import org.flow.repositories.AchievementRepository;
 import org.flow.repositories.SessionRepository;
 import org.flow.repositories.UserAchievementRepository;
@@ -75,6 +74,7 @@ public class UserController {
             newUser.setLastName(jsonObject.getString("lastName"));
             newUser.setNickName(jsonObject.getString("nickName"));
             newUser.setEmail(jsonObject.getString("email"));
+            newUser.setRoleType(jsonObject.getString("role"));
             Date dob = null;
             try {
                 dob = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("dob"));
@@ -83,7 +83,6 @@ public class UserController {
             }
             newUser.setDob(dob);
             newUser.setGender(jsonObject.getBoolean("gender"));
-            newUser.setRoleType(User.RoleTypes.valueOf("USER"));
             userRepository.save(newUser);
             return ResponseEntity.ok(newUser);
         }
