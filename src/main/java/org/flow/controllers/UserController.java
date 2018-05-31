@@ -39,7 +39,7 @@ public class UserController {
     private AchievementRepository achievementRepository;
 
     //get all users
-    @GetMapping(path="/")
+    @GetMapping
     public @ResponseBody ResponseEntity getAllUsers () {
         return ResponseEntity.ok(userRepository.findAll());
     }

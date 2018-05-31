@@ -41,7 +41,7 @@ public class SessionController {
             session.setExpiration(date);
             sessionRepository.save(session);
             long userID = loggedUser.getId();
-            String credentials = new JSONObject().put("token", token).put("userID", String.valueOf(userID)).toString();
+            String credentials = token + "." + String.valueOf(userID);
             System.out.println(credentials);
             return new ResponseEntity<>(credentials, HttpStatus.OK);
         } else {
