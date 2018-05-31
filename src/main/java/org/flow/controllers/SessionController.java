@@ -40,7 +40,9 @@ public class SessionController {
             date.setTime(date.getTime() + 20000);
             session.setExpiration(date);
             sessionRepository.save(session);
-            return ResponseEntity.ok(token);
+            long userID = loggedUser.getId();
+            String credentials = "{token:" + "\"" + token + "\"" + ",userID:" + "\"" + String.valueOf(userID) + "\"" + "}";
+            return new ResponseEntity<>(credentials, HttpStatus.OK);
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
