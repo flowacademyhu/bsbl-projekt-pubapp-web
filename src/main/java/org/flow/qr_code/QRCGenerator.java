@@ -17,7 +17,7 @@ import java.util.*;
 public class QRCGenerator {
 
     public static void main(String[] args) {
-        for (int i = 21; i < 43; i++) {
+        for (int i = 1; i < 43; i++) {
             QRCGenerator qrcGenerator = new QRCGenerator();
             try {
                 qrcGenerator.generateQRCode();

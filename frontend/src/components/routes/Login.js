@@ -75,7 +75,7 @@ class Login extends Component {
         console.log(response.status);
 
         if (status === +200) {
-          window.location.replace('/home');
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      window.location.replace('/home');
         }
       }
       
