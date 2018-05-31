@@ -36,22 +36,10 @@ public class OrderingController {
         return ResponseEntity.ok(newOrdering);
     }
 
-    /*
-    //update ordering
-    @PutMapping(path="/{id}")
-    public @ResponseBody Ordering updateOrdering (@PathVariable("id") Long id) {
-        Ordering updatedOrdering = orderingRepository.findById(id).get();
-        orderingRepository.save(updatedOrdering);
-        return updatedOrdering;
-    }
-    */
-
-
     //delete ordering by ID
     @DeleteMapping(path = "/{id}")
     public @ResponseBody ResponseEntity deleteORdering (@PathVariable("id") Long id) {
         orderingRepository.deleteById(id);
         return ResponseEntity.ok(orderingRepository.findAll());
     }
-
 }
