@@ -6,33 +6,42 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
+import org.apache.commons.lang.RandomStringUtils;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class QRCGenerator {
 
     public static void main(String[] args) {
-        QRCGenerator qrcGenerator = new QRCGenerator();
-        try {
-            qrcGenerator.generateQRCode("This is a QR Code with lots of data.", 300, 300, "myQRcode.png");
-        } catch (WriterException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        for (int i = 21; i < 43; i++) {
+            QRCGenerator qrcGenerator = new QRCGenerator();
+            try {
+                qrcGenerator.generateQRCode();
+            } catch (WriterException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } //for
     }
 
-    private void generateQRCode(String text, int width, int height, String filePath)
+    private void generateQRCode()
             throws WriterException, IOException {
+        int size = 300;
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         Map<EncodeHintType, Object> hints = new HashMap<>();
         hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
-        BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, width, height, hints);
-        Path path = FileSystems.getDefault().getPath(filePath);
+        String rndchars = RandomStringUtils.randomAlphanumeric(4);
+        String uniquefilename = new SimpleDateFormat("'QR_'yyyyMMdd-HHmm'_'").format(new Date());
+        Path path = FileSystems.getDefault().getPath("myQRcodes/", uniquefilename + rndchars);
+        BitMatrix bitMatrix = qrCodeWriter.encode(path.toString(), BarcodeFormat.QR_CODE, size, size, hints);
         MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
+
     }
 }
 
