@@ -31,7 +31,7 @@ public class UserControllerTest {
         this.mockMvc.perform(get("/users/{id}", 1))
                 .andExpect(status().isOk());
     }
-    */
+
 
     @Test
     public void createUser() throws Exception {
@@ -45,4 +45,5 @@ public class UserControllerTest {
                 .param("gender", "true"))
                 .andExpect(status().isOk());
     }
+    */
 }
