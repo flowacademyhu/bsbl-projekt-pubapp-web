@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,55 +30,77 @@ public class AchievementConditionController {
     @Autowired
     private ProductRepository productRepository;
 
+    UserController userController = new UserController();
+
     //get achievement conditions
     @GetMapping(path = "/{id}/achievement_conditions")
-    public @ResponseBody ResponseEntity findAchievementConditions(@PathVariable("id") Long id) {
-        Iterable<AchievementCondition> allAchievementConditions = achievementConditionRepository.findAll();
-        List<AchievementCondition> achievementConditionList = new ArrayList();
-        for (AchievementCondition achievementCondition : allAchievementConditions) {
-            if (achievementCondition.getAchievement().getId().equals(achievementRepository.findById(id).get().getId())) {
-                achievementConditionList.add(achievementCondition);
+    public @ResponseBody ResponseEntity findAchievementConditions(@PathVariable("id") Long id, @RequestHeader String token) {
+        if(userController.isAdmin(token)) {
+            Iterable<AchievementCondition> allAchievementConditions = achievementConditionRepository.findAll();
+            List<AchievementCondition> achievementConditionList = new ArrayList();
+            for (AchievementCondition achievementCondition : allAchievementConditions) {
+                if (achievementCondition.getAchievement().getId().equals(achievementRepository.findById(id).get().getId())) {
+                    achievementConditionList.add(achievementCondition);
+                }
             }
+            Iterable<AchievementCondition> conditions = achievementConditionList;
+            return ResponseEntity.ok(conditions);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
         }
-        Iterable<AchievementCondition> conditions = achievementConditionList;
-        return ResponseEntity.ok(conditions);
     }
 
     //get achievement condition by ID
     @GetMapping(path = "/{id}/achievement_conditions/{id2}")
-    public @ResponseBody ResponseEntity getAchievementConditionById(@PathVariable("id") Long id2) throws AchievementNotFoundException {
-        Optional<AchievementCondition> achievementCondition = achievementConditionRepository.findById(id2);
-        return ResponseEntity.ok(achievementCondition);
+    public @ResponseBody ResponseEntity getAchievementConditionById(@PathVariable("id") Long id2, @RequestHeader String token) throws AchievementNotFoundException {
+        if(userController.isAdmin(token)) {
+            Optional<AchievementCondition> achievementCondition = achievementConditionRepository.findById(id2);
+            return ResponseEntity.ok(achievementCondition);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
+        }
     }
 
     //create new achievement condition
     @PostMapping(path="/{id}/achievement_conditions")
-    public @ResponseBody ResponseEntity addNewAchievementCondition (@PathVariable("id") Long id, @RequestBody String condition) {
-        AchievementCondition newAchievementCondition = new AchievementCondition();
-        JSONObject jsonObject = new JSONObject(condition);
-        newAchievementCondition.setQuantity(jsonObject.getInt("quantity"));
-        newAchievementCondition.setAchievement(achievementRepository.findById(id).get());
-        newAchievementCondition.setProduct(productRepository.findByName(jsonObject.getString("productName")));
-        achievementConditionRepository.save(newAchievementCondition);
-        return ResponseEntity.ok(newAchievementCondition);
+    public @ResponseBody ResponseEntity addNewAchievementCondition (@PathVariable("id") Long id, @RequestBody String condition, @RequestHeader String token) {
+        if(userController.isAdmin(token)) {
+            AchievementCondition newAchievementCondition = new AchievementCondition();
+            JSONObject jsonObject = new JSONObject(condition);
+            newAchievementCondition.setQuantity(jsonObject.getInt("quantity"));
+            newAchievementCondition.setAchievement(achievementRepository.findById(id).get());
+            newAchievementCondition.setProduct(productRepository.findByName(jsonObject.getString("productName")));
+            achievementConditionRepository.save(newAchievementCondition);
+            return ResponseEntity.ok(newAchievementCondition);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
+        }
     }
 
     //update achievement condition
     @PutMapping(path="/{id}/achievement_conditions/{id2}")
     public @ResponseBody ResponseEntity updateAchievementCondition(@PathVariable("id2") Long id,
-                                                                         @RequestBody String condition) {
-        AchievementCondition achievementCondition = achievementConditionRepository.findById(id).get();
-        JSONObject jsonObject = new JSONObject(condition);
-        achievementCondition.setQuantity(jsonObject.getInt("quantity"));
-        achievementCondition.setProduct(productRepository.findByName(jsonObject.getString("productName")));
-        achievementConditionRepository.save(achievementCondition);
-        return ResponseEntity.ok(achievementCondition);
+                                                                         @RequestBody String condition, @RequestHeader String token) {
+        if(userController.isAdmin(token)) {
+            AchievementCondition achievementCondition = achievementConditionRepository.findById(id).get();
+            JSONObject jsonObject = new JSONObject(condition);
+            achievementCondition.setQuantity(jsonObject.getInt("quantity"));
+            achievementCondition.setProduct(productRepository.findByName(jsonObject.getString("productName")));
+            achievementConditionRepository.save(achievementCondition);
+            return ResponseEntity.ok(achievementCondition);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
+        }
     }
 
     //delete achievement condition
     @DeleteMapping(path="/{id}/achievement_conditions/{id2}")
-    public @ResponseBody ResponseEntity deleteAchievementCondition(@PathVariable("id2") Long id2) {
-        achievementConditionRepository.deleteById(id2);
-        return ResponseEntity.ok(achievementConditionRepository.findAll());
+    public @ResponseBody ResponseEntity deleteAchievementCondition(@PathVariable("id2") Long id2, @RequestHeader String token) {
+        if(userController.isAdmin(token)) {
+            achievementConditionRepository.deleteById(id2);
+            return ResponseEntity.ok(achievementConditionRepository.findAll());
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
+        }
     }
 }
