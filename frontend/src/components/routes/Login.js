@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import FormFields from './widgets/forms/FormFields';
 import axios from 'axios';
-class User extends Component {
-  constructor(props) {
+import {Jumbotron} from 'react-bootstrap';
+
+
+class Login extends Component {
+    constructor(props) {
     super(props);
     this.state = {
       formData: {
@@ -13,11 +16,12 @@ class User extends Component {
           labelText: 'Email',
           config: {
             name: 'email_input',
-            type: 'text',
+            type:'email',
             placeholder: 'Enter your email'
           },
           validation: {
             required: true,
+            minLen:5
           },
           valid: false,
           touched: false,
@@ -35,6 +39,7 @@ class User extends Component {
           },
           validation: {
             required: true,
+            minLen:5
           },
           valid: false,
           touched: false,
@@ -43,18 +48,18 @@ class User extends Component {
       }
     };
   }
-  updateForm (newState) {
+  updateForm(newState) {
     this.setState({
-      formData: newState  
+      formData: newState
     });
   }
 
   submitForm = (event) => {
     event.preventDefault();
-    let dataToSubmit = {email: this.state.formData.email.value, password: this.state.formData.password.value};
+    let dataToSubmit = { email: this.state.formData.email.value, password: this.state.formData.password.value };
     console.log(dataToSubmit);
     let data = JSON.stringify(dataToSubmit);
-    console.log(data);
+
     axios.defaults.headers.post['Content-Type'] = 'application/json';
     axios.post('http://127.0.0.1:8080/sessions', data, {
       headers: {
@@ -64,25 +69,28 @@ class User extends Component {
       }
     })
       .then(function (response) {
+        
         console.log(response);
-      })
-      .catch(function (error) {
-        if (error.response) {
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        } else if (error.request) {
-          console.log(error.request);
-        } else {
-          console.log('Error', error.message);
+        const status = JSON.parse(response.status);
+        console.log(response.status);
+
+        if (status === +200) {
+          window.location.replace('/home');
         }
-        console.log(error.config);
-        console.log(error);
-      });
+      }
+      
+      
+    
+    )
+
+   
+
+      
 
   }
   render() {
-    return (
+
+       return (
       <div className='container'>
         <form onSubmit={this.submitForm}>
           <FormFields
@@ -91,8 +99,17 @@ class User extends Component {
           />
           <button type='submit'>Submit</button>
         </form>
+        <Jumbotron>
+          <h1>Welcome </h1>
+          <h2> Orgiginal PubAPP </h2>
+
+          <ul>
+            <li> gooogle play  link <a href='asdasdasd'> click me </a>  </li>
+            <li> app store link <a href='asdasdasd'>click me </a> </li>
+          </ul>
+        </Jumbotron>
       </div>
     )
   }
 }
-export default User;
+export default Login;

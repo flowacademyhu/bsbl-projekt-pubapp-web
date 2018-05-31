@@ -4,27 +4,25 @@ import {ModalFooter} from 'react-bootstrap';
 
 // Components
 import Login from './routes/Login';
-import Home from './routes/Home';
+import Home from './routes/Home.js';
 import Achivement from './routes/Achivements';
 import Orders from './routes/Orders';
 import Products from './routes/Products';
 import Users from './routes/Users';
 import Registration from './routes/Registration';
 import NotFound from './routes/NotFound';
-import MyForm from './routes/Myform';
  
 const Router = () => (
   <BrowserRouter>
     <div>
       <Switch>
-        <Route path='/myfrom' component={MyForm} />
         <Route path='/registration' component={Registration} />
-        <Route path='/login' component={Login} />
+        <Route exact path='/' component={Login} />
         <Route path='/achivement' component={Achivement} />
         <Route path='/order' component={Orders} />
         <Route path='/product' component={Products} />
         <Route path='/user' component={Users} />
-        <Route path='/' exact component={Home} />
+        <Route path='/home' component={Home} />
         <Route component={NotFound} />
       </Switch>
       <ModalFooter>
