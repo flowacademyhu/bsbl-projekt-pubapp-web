@@ -38,7 +38,7 @@ public class UserController {
     private AchievementRepository achievementRepository;
 
     //get all users
-    @GetMapping(path="/")
+    @GetMapping
     public @ResponseBody ResponseEntity getAllUsers () {
         return ResponseEntity.ok(userRepository.findAll());
     }
@@ -131,5 +131,9 @@ public class UserController {
 
     public boolean checkUser(Long id, String token) {
         return sessionRepository.findByToken(token).getUser().getId() == id;
+    }
+
+    public boolean isAdmin(String token) {
+        return String.valueOf(sessionRepository.findByToken(token).getUser().getRoleType()).equals("ADMIN");
     }
 }

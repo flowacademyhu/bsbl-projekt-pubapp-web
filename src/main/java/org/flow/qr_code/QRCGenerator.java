@@ -27,7 +27,7 @@ public class QRCGenerator {
                 e.printStackTrace();
             }
 
-        } //for
+        }
     }
 
     private void generateQRCode()

@@ -46,7 +46,7 @@ public class User {
     private String lastName;
 
     @Column(name = "nick_name", nullable = false)
-                                                                                                                        private String nickName;
+    private String nickName;
 
     @Column(name = "email", unique = true, nullable = false)
     private String email;

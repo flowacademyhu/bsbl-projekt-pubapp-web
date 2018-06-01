@@ -26,6 +26,8 @@ public class SessionController {
     @Autowired
     private SessionRepository sessionRepository;
 
+    UserController userController = new UserController();
+
     @PostMapping
     public @ResponseBody ResponseEntity login(@RequestBody String login) {
         JSONObject jsonObject = new JSONObject(login);
@@ -41,12 +43,30 @@ public class SessionController {
             session.setExpiration(date);
             sessionRepository.save(session);
             long userID = loggedUser.getId();
-            String credentials = token;
-            if (String.valueOf(loggedUser.getRoleType()).equals("USER")) {
-                credentials = credentials + "." + String.valueOf(userID);
-            }
+            String credentials = token + "." + String.valueOf(userID);
             System.out.println(credentials);
             return new ResponseEntity<>(credentials, HttpStatus.OK);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+    @PostMapping(path="/sessions/admin")
+    public @ResponseBody ResponseEntity adminLogin(@RequestBody String login) {
+        JSONObject jsonObject = new JSONObject(login);
+        User loggedUser = userRepository.findByEmail(jsonObject.getString("email"));
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if(passwordEncoder.matches(jsonObject.getString("password"), loggedUser.getPassword()) &&
+                String.valueOf(loggedUser.getRoleType()).equals("ADMIN")) {
+            String token = UUID.randomUUID().toString();
+            Session session = new Session();
+            session.setToken(token);
+            session.setUser(loggedUser);
+            Date date = new Date();
+            date.setTime(date.getTime() + 20000);
+            session.setExpiration(date);
+            sessionRepository.save(session);
+            return new ResponseEntity<>(token, HttpStatus.OK);
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
