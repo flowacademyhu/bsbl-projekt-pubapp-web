@@ -111,10 +111,7 @@ const FormFields = (props) => {
               value={values.value}
               onChange={
                 (event) => changeHandler(event, data.id)
-              }
-             />
-
-              >
+              } />
           </div>
         );
         break;

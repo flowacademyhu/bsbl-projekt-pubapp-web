@@ -43,8 +43,12 @@ public class ProductController {
 
      //create new product
     @PostMapping
-    public @ResponseBody ResponseEntity addNewProduct (@RequestBody String product, @RequestHeader String token) {
+    public @ResponseBody ResponseEntity addNewProduct (@RequestBody String product
+/*, @RequestHeader String token) {
         if(userController.isAdmin(token)) {
+*/
+
+) {
             JSONObject jsonObject = new JSONObject(product);
             Product newProduct = new Product();
             newProduct.setName(jsonObject.getString("name"));
@@ -53,10 +57,10 @@ public class ProductController {
             newProduct.setXpValue(jsonObject.getInt("xpValue"));
             productRepository.save(newProduct);
             return ResponseEntity.ok(newProduct);
-        } else {
+ /*       } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
         }
-
+*/
     }
 
     // update product

@@ -1,8 +1,8 @@
 import React from 'react';
-import Achivements from './Achivements';
+import Achievements from './Achievements';
 import CreateAchivements from './CreateAchivements';
 
-class AchivementsIndex extends React.Component {
+class AchievementsIndex extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -40,11 +40,11 @@ class AchivementsIndex extends React.Component {
   render () {
     return (
       <div>
-        <Achivements toDos={this.state.toDos} delete={this.delete.bind(this)} />
+        <Achievements toDos={this.state.toDos} delete={this.delete.bind(this)} />
         <CreateAchivements submit={this.submit.bind(this)} />
       </div>
     );
   }
 }
 
-export default AchivementsIndex;
+export default AchievementsIndex;

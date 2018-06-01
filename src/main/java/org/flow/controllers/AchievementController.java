@@ -48,8 +48,13 @@ public class AchievementController {
 
     //create new achievement
     @PostMapping
-    public @ResponseBody ResponseEntity addNewAchievement (@RequestBody String achievement, @RequestHeader String token) {
+    public @ResponseBody ResponseEntity addNewAchievement (@RequestBody String achievement
+
+/*, @RequestHeader String token) {
         if(userController.isAdmin(token)) {
+*/
+) {
+		System.out.println("asfasfasf");
             JSONObject jsonObject = new JSONObject(achievement);
             Achievement newAchievement = new Achievement();
             newAchievement.setName(jsonObject.getString("name"));
@@ -64,9 +69,10 @@ public class AchievementController {
             newAchievement.setExpiration(expiration);
             achievementRepository.save(newAchievement);
             return ResponseEntity.ok(newAchievement);
+/*
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
-        }
+        }*/
     }
 
     //update achievement
