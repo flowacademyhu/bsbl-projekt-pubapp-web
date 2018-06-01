@@ -58,6 +58,14 @@ public class SessionController {
         return ResponseEntity.ok("LOGGED OUT");
     }
 
+    @PostMapping(path="/badsession")
+    public @ResponseBody ResponseEntity userLoginToAdminPage (@RequestHeader String badlogin) {
+        System.out.println("try");
+        JSONObject jsonObject = new JSONObject(badlogin);
+        sessionRepository.delete(sessionRepository.findByToken(badlogin));
+        return ResponseEntity.ok("You don't have permission to this site");
+    }
+
     public void stayingALive(String token) {
         Date date = new Date();
         if(sessionRepository.findByToken(token).getExpiration().before(date)) {

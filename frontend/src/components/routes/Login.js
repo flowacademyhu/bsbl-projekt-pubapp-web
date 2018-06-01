@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import FormFields from './widgets/forms/FormFields';
 import axios from 'axios';
-import {Jumbotron} from 'react-bootstrap';
+import { Jumbotron } from 'react-bootstrap';
 
 
 class Login extends Component {
-    constructor(props) {
+  constructor(props) {
     super(props);
     this.state = {
       formData: {
@@ -16,12 +16,12 @@ class Login extends Component {
           labelText: 'Email',
           config: {
             name: 'email_input',
-            type:'email',
+            type: 'email',
             placeholder: 'Enter your email'
           },
           validation: {
             required: true,
-            minLen:5
+            minLen: 5
           },
           valid: false,
           touched: false,
@@ -39,7 +39,7 @@ class Login extends Component {
           },
           validation: {
             required: true,
-            minLen:5
+            minLen: 5
           },
           valid: false,
           touched: false,
@@ -61,36 +61,31 @@ class Login extends Component {
     let data = JSON.stringify(dataToSubmit);
 
     axios.defaults.headers.post['Content-Type'] = 'application/json';
-    axios.post('http://127.0.0.1:8080/sessions', data, {
+
+
+    axios.post('http://127.0.0.1:8080/sessions/admin', data, {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         'Access-Control-Allow-Origin': '*'
       }
     })
+
       .then(function (response) {
-        
         console.log(response);
+        const lofasz = response.data;
         const status = JSON.parse(response.status);
         console.log(response.status);
 
         if (status === +200) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      window.location.replace('/home');
+          window.location.replace('/home');
         }
-      }
-      
-      
-    
-    )
-
-   
-
-      
+        })
 
   }
   render() {
 
-       return (
+    return (
       <div className='container'>
         <form onSubmit={this.submitForm}>
           <FormFields
