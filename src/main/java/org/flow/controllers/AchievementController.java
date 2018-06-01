@@ -44,7 +44,6 @@ public class AchievementController {
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
         }
-
     }
 
     //create new achievement
@@ -68,7 +67,6 @@ public class AchievementController {
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
         }
-
     }
 
     //update achievement
@@ -92,7 +90,6 @@ public class AchievementController {
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
         }
-
     }
 
     //delete achievement by ID
