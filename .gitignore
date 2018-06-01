@@ -1,3 +1,5 @@
+/.settings/
+/bin/
 /.idea/
 src/.idea/
 /out/
@@ -11,4 +13,5 @@ gradlew.bat
 **/node_modules
 *.txt
 *.iml
+*.png
 

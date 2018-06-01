@@ -2,11 +2,16 @@ package org.flow.controllers;
 
 import org.flow.models.Achievement;
 import org.flow.repositories.AchievementRepository;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 
@@ -17,54 +22,84 @@ public class AchievementController {
     @Autowired
     private AchievementRepository achievementRepository;
 
+    UserController userController = new UserController();
+
     //get all achievements
-    @GetMapping(path="/")
-    public @ResponseBody Iterable<Achievement> getAllAchievements() {
-        return achievementRepository.findAll();
+    @GetMapping
+    public @ResponseBody ResponseEntity getAllAchievements() {
+        return ResponseEntity.ok(achievementRepository.findAll());
     }
 
     //get achievement by ID
     @GetMapping(path = "/{id}")
-    public @ResponseBody Achievement getAchievementById (@PathVariable("id") Long id)  throws AchievementNotFoundException {
-        Optional<Achievement> achievement = achievementRepository.findById(id);
-        if (!achievement.isPresent()) {
-            throw new AchievementNotFoundException("Achievement not found.");
+    public @ResponseBody ResponseEntity getAchievementById (@PathVariable("id") Long id, @RequestHeader String token)  throws AchievementNotFoundException {
+        if(userController.isAdmin(token)) {
+            Optional<Achievement> achievement = achievementRepository.findById(id);
+            if (!achievement.isPresent()) {
+                //throw new AchievementNotFoundException("Achievement not found.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+
+            }
+            return ResponseEntity.ok(achievement);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
         }
-        return achievement.get();
     }
 
     //create new achievement
-    @PostMapping(path="/")
-    public @ResponseBody Achievement addNewAchievement (@RequestParam String name, @RequestParam String description,
-                                                   @RequestParam Integer xpValue,
-                                                   @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date expiration) {
-        Achievement newAchievement = new Achievement();
-        newAchievement.setName(name);
-        newAchievement.setDescription(description);
-        newAchievement.setXpValue(xpValue);
-        newAchievement.setExpiration(expiration);
-        achievementRepository.save(newAchievement);
-        return newAchievement;
+    @PostMapping
+    public @ResponseBody ResponseEntity addNewAchievement (@RequestBody String achievement, @RequestHeader String token) {
+        if(userController.isAdmin(token)) {
+            JSONObject jsonObject = new JSONObject(achievement);
+            Achievement newAchievement = new Achievement();
+            newAchievement.setName(jsonObject.getString("name"));
+            newAchievement.setDescription(jsonObject.getString("description"));
+            newAchievement.setXpValue(jsonObject.getInt("xpValue"));
+            Date expiration = null;
+            try {
+                expiration = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("expiration"));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            newAchievement.setExpiration(expiration);
+            achievementRepository.save(newAchievement);
+            return ResponseEntity.ok(newAchievement);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
+        }
     }
 
     //update achievement
-    @PutMapping(path="/{id}/")
-    public @ResponseBody Achievement updateAchievement(@PathVariable("id") Long id, @RequestParam String name,
-                                                       @RequestParam String description, @RequestParam Integer xpValue,
-                                                       @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date expiration) {
-        Achievement updatedAchievement = achievementRepository.findById(id).get();
-        updatedAchievement.setName(name);
-        updatedAchievement.setDescription(description);
-        updatedAchievement.setXpValue(xpValue);
-        updatedAchievement.setExpiration(expiration);
-        achievementRepository.save(updatedAchievement);
-        return updatedAchievement;
+    @PutMapping(path="/{id}")
+    public @ResponseBody ResponseEntity updateAchievement(@PathVariable("id") Long id, @RequestBody String achievement, @RequestHeader String token) {
+        if(userController.isAdmin(token)) {
+            Achievement updatedAchievement = achievementRepository.findById(id).get();
+            JSONObject jsonObject = new JSONObject(achievement);
+            updatedAchievement.setName(jsonObject.getString("name"));
+            updatedAchievement.setDescription(jsonObject.getString("description"));
+            updatedAchievement.setXpValue(jsonObject.getInt("xpValue"));
+            Date expiration = null;
+            try {
+                expiration = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("expiration"));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            updatedAchievement.setExpiration(expiration);
+            achievementRepository.save(updatedAchievement);
+            return ResponseEntity.ok(updatedAchievement);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
+        }
     }
 
     //delete achievement by ID
     @DeleteMapping(path = "/{id}")
-    public @ResponseBody Iterable<Achievement> deleteAchievement(@PathVariable("id") Long id) {
-        achievementRepository.deleteById(id);
-        return achievementRepository.findAll();
+    public @ResponseBody ResponseEntity deleteAchievement(@PathVariable("id") Long id, @RequestHeader String token) {
+        if(userController.isAdmin(token)) {
+            achievementRepository.deleteById(id);
+            return ResponseEntity.ok(achievementRepository.findAll());
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
+        }
     }
 }

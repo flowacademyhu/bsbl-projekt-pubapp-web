@@ -2,6 +2,8 @@ package org.flow.controllers;
 import org.flow.models.Ordering;
 import org.flow.repositories.OrderingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -13,42 +15,52 @@ public class OrderingController {
     @Autowired
     private OrderingRepository orderingRepository;
 
+    UserController userController = new UserController();
+
     //get all orderings
-    @GetMapping(path="/")
-    public @ResponseBody Iterable<Ordering> findAllProducts () {
-        return orderingRepository.findAll();
+    @GetMapping
+    public @ResponseBody ResponseEntity findAllProducts (@RequestHeader String token) {
+        if(userController.isAdmin(token)) {
+            return ResponseEntity.ok(orderingRepository.findAll());
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
+        }
     }
 
     // get ordering by ID
     @GetMapping(path="/{id}")
-    public @ResponseBody Ordering getProductById (@PathVariable("id") Long id) {
-        Optional<Ordering> ordering = orderingRepository.findById(id);
-        return ordering.get();
+    public @ResponseBody ResponseEntity getProductById (@PathVariable("id") Long id, @RequestHeader String token) {
+        if(userController.isAdmin(token)) {
+            Optional<Ordering> ordering = orderingRepository.findById(id);
+            return ResponseEntity.ok(ordering);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
+        }
+
     }
 
     //create new ordering
-    @PostMapping(path="/")
-    public @ResponseBody Ordering addNewOrdering (@RequestParam String qrCodePath) {
-        Ordering newOrdering = new Ordering();
-        newOrdering.setQrCodePath(qrCodePath);
-        orderingRepository.save(newOrdering);
-        return newOrdering;
+    @PostMapping
+    public @ResponseBody ResponseEntity addNewOrdering (@RequestHeader String token) {
+        if(userController.isAdmin(token)) {
+            Ordering newOrdering = new Ordering();
+            newOrdering.setQrCodePath("qrCodePath");
+            orderingRepository.save(newOrdering);
+            return ResponseEntity.ok(newOrdering);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
+        }
     }
-
-    //update ordering
-    @PutMapping(path="/{id}")
-    public @ResponseBody Ordering updateOrdering (@PathVariable("id") Long id) {
-        Ordering updatedOrdering = orderingRepository.findById(id).get();
-        orderingRepository.save(updatedOrdering);
-        return updatedOrdering;
-    }
-
 
     //delete ordering by ID
     @DeleteMapping(path = "/{id}")
-    public @ResponseBody Iterable<Ordering> deleteORdering (@PathVariable("id") Long id) {
-        orderingRepository.deleteById(id);
-        return orderingRepository.findAll();
-    }
+    public @ResponseBody ResponseEntity deleteOrdering (@PathVariable("id") Long id, @RequestHeader String token) {
+        if(userController.isAdmin(token)) {
+            orderingRepository.deleteById(id);
+            return ResponseEntity.ok(orderingRepository.findAll());
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
+        }
 
+    }
 }

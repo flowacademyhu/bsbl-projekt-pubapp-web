@@ -26,27 +26,49 @@ public class SessionController {
     @Autowired
     private SessionRepository sessionRepository;
 
+    UserController userController = new UserController();
+
     @PostMapping
-    public @ResponseBody ResponseEntity login(User login) {
-System.out.println("trytologin");
-        System.out.println(login);
-        System.out.println(login.getEmail());
-        User loggedUser = userRepository.findByEmail(login.getEmail());
+    public @ResponseBody ResponseEntity login(@RequestBody String login) {
+        JSONObject jsonObject = new JSONObject(login);
+        User loggedUser = userRepository.findByEmail(jsonObject.getString("email"));
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        if(passwordEncoder.matches(login.getPassword(), loggedUser.getPassword())) {
-System.out.println("authenticationok");
+        if(passwordEncoder.matches(jsonObject.getString("password"), loggedUser.getPassword())) {
             String token = UUID.randomUUID().toString();
             Session session = new Session();
             session.setToken(token);
             session.setUser(loggedUser);
             Date date = new Date();
-            date.setTime(date.getTime() + 1000000);
+            date.setTime(date.getTime() + 20000);
             session.setExpiration(date);
             sessionRepository.save(session);
-            return ResponseEntity.ok(token);
+            long userID = loggedUser.getId();
+            String credentials = token + "." + String.valueOf(userID);
+            System.out.println(credentials);
+            return new ResponseEntity<>(credentials, HttpStatus.OK);
         } else {
-System.out.println("cantauthenticate");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("asd");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+    @PostMapping(path="/sessions/admin")
+    public @ResponseBody ResponseEntity adminLogin(@RequestBody String login) {
+        JSONObject jsonObject = new JSONObject(login);
+        User loggedUser = userRepository.findByEmail(jsonObject.getString("email"));
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if(passwordEncoder.matches(jsonObject.getString("password"), loggedUser.getPassword()) &&
+                String.valueOf(loggedUser.getRoleType()).equals("ADMIN")) {
+            String token = UUID.randomUUID().toString();
+            Session session = new Session();
+            session.setToken(token);
+            session.setUser(loggedUser);
+            Date date = new Date();
+            date.setTime(date.getTime() + 20000);
+            session.setExpiration(date);
+            sessionRepository.save(session);
+            return new ResponseEntity<>(token, HttpStatus.OK);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 
@@ -56,16 +78,21 @@ System.out.println("cantauthenticate");
         return ResponseEntity.ok("LOGGED OUT");
     }
 
-    /*
-    @RequestMapping
-    public void stayingALive(@RequestHeader String token) {
+    @PostMapping(path="/badsession")
+    public @ResponseBody ResponseEntity userLoginToAdminPage (@RequestHeader String badlogin) {
+        System.out.println("try");
+        JSONObject jsonObject = new JSONObject(badlogin);
+        sessionRepository.delete(sessionRepository.findByToken(badlogin));
+        return ResponseEntity.ok("You don't have permission to this site");
+    }
+
+    public void stayingALive(String token) {
         Date date = new Date();
         if(sessionRepository.findByToken(token).getExpiration().before(date)) {
             sessionRepository.delete(sessionRepository.findByToken(token));
         } else {
-            date.setTime(date.getTime() + 1000000);
+            date.setTime(date.getTime() + 20000);
             sessionRepository.findByToken(token).setExpiration(date);
         }
     }
-    */
 }

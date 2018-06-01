@@ -12,9 +12,9 @@ import java.util.List;
 @Table(name = "user")
 public class User {
 
-    public enum RoleTypes {
+    private enum RoleTypes {
         USER,
-        ADMIN
+        ADMIN;
     }
 
     @Id
@@ -94,8 +94,8 @@ public class User {
         return roleType;
     }
 
-    public void setRoleType(RoleTypes roleType) {
-        this.roleType = roleType;
+    public void setRoleType(String roleType) {
+        this.roleType = RoleTypes.valueOf(roleType.toString());
     }
 
     public String getFirstName() {
@@ -146,33 +146,4 @@ public class User {
         this.gender = gender;
     }
 
-    /*
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        long result = 1;
-        result = prime * result + id;
-        result = prime * result + ((ssoId == null) ? 0 : ssoId.hashCode());
-        return (int)result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (!(obj instanceof User))
-            return false;
-        User other = (User) obj;
-        if (id != other.id)
-            return false;
-        if (ssoId == null) {
-            if (other.ssoId != null)
-                return false;
-        } else if (!ssoId.equals(other.ssoId))
-            return false;
-        return true;
-    }
-    */
 }
