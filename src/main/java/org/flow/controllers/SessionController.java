@@ -51,7 +51,7 @@ public class SessionController {
         }
     }
 
-    @PostMapping(path="/sessions/admin")
+    @PostMapping(path="/admin")
     public @ResponseBody ResponseEntity adminLogin(@RequestBody String login) {
         JSONObject jsonObject = new JSONObject(login);
         User loggedUser = userRepository.findByEmail(jsonObject.getString("email"));
@@ -68,7 +68,7 @@ public class SessionController {
             sessionRepository.save(session);
             return new ResponseEntity<>(token, HttpStatus.OK);
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            return new ResponseEntity<>("BAD", HttpStatus.NOT_ACCEPTABLE);
         }
     }
 

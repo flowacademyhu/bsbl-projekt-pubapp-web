@@ -73,14 +73,22 @@ class Login extends Component {
 
       .then(function (response) {
         console.log(response);
-        const lofasz = response.data;
         const status = JSON.parse(response.status);
         console.log(response.status);
 
         if (status === +200) {
           window.location.replace('/home');
         }
-        })
+        
+        
+      })
+
+      .catch (function (error) {
+        if (error.response.status === 406) {
+            window.location.replace('http://heeeeeeeey.com/');
+        }
+        return Promise.reject(error.response);
+    });
 
   }
   render() {
