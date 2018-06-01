@@ -1,0 +1,34 @@
+body {
+  padding:0;
+  margin:0;
+  font-family: 'Roboto', sans-serif;
+  background-color: red;
+}
+
+p {
+  color:blue;
+}
+
+label {
+  color:blue;
+
+}
+
+
+
+form {background-color: #92a8d1;}
+
+
+labeltext {
+  color:blue;
+}
+
+button {
+  color:green;
+}
+
+textarea {
+  background-color: yellow;
+  color: blue;
+  resize: none !important;
+}

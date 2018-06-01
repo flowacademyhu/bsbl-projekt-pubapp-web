@@ -51,6 +51,25 @@ const FormFields = (props) => {
           </div>
         );
         break;
+
+      case ('textarea'):
+        formTemplate = (
+          <div>
+            <p>description</p>
+            {showLabel(values.label, values.labelText)}
+            <textarea
+              {...values.config}
+              value={values.value}
+              onChange={
+                (event) => changeHandler(event, data.id)
+              }
+             />
+
+              >
+          </div>
+        );
+        break;
+
       default:
         formTemplate = null;
     }

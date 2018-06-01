@@ -12,11 +12,16 @@ import Users from './routes/Users';
 import Registration from './routes/Registration';
 import NotFound from './routes/NotFound';
 import MyForm from './routes/Myform';
+import AchivementsLine from './routes/Achivements/AchivementsLine';
+import TodoIndex from './routes/todoIndex';
+import NewAchivement from './routes/CreateAchivement/CreateAchivementForm';
+
  
 const Router = () => (
   <BrowserRouter>
     <div>
       <Switch>
+        <Route path='/newAchivement' component={NewAchivement} />
         <Route path='/myfrom' component={MyForm} />
         <Route path='/registration' component={Registration} />
         <Route path='/login' component={Login} />
@@ -24,6 +29,7 @@ const Router = () => (
         <Route path='/order' component={Orders} />
         <Route path='/product' component={Products} />
         <Route path='/user' component={Users} />
+        <Route path='/todos' component={TodoIndex} />
         <Route path='/' exact component={Home} />
         <Route component={NotFound} />
       </Switch>

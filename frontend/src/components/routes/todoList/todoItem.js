@@ -1,7 +1,7 @@
 import ListGroupItem from 'react-bootstrap/lib/ListGroupItem';
 import React from 'react';
 
-class AchivementsLine extends React.Component {
+class TodoItem extends React.Component {
   constructor (props) {
     super(props);
     this.state = {isDone: false};
@@ -26,4 +26,4 @@ class AchivementsLine extends React.Component {
     );
   }
 }
-export default AchivementsLine;
+export default TodoItem;

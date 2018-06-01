@@ -2,8 +2,11 @@ body {
     padding:0;
     margin:0;
     font-family: 'Roboto', sans-serif;
+    background-color: red;
 }
-
+textarea {
+    resize: none;
+}
 header {
     border-bottom: 1px solid #b6b6b6;
     box-sizing: border-box;
