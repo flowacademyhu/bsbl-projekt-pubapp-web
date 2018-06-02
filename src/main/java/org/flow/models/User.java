@@ -52,7 +52,7 @@ public class User {
     private String email;
 
     @Column(name = "date_of_birth", nullable = false)
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @Temporal(TemporalType.DATE)
     private Date dob;
 
     @Column(name = "gender", nullable = false)

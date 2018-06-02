@@ -45,7 +45,7 @@ public class UserController {
 
     //get user by ID
     @GetMapping(path = "/{id}")
-    public @ResponseBody ResponseEntity getUserById (@PathVariable("id") Long id, @RequestHeader String token)  throws UserNotFoundException {
+    public @ResponseBody ResponseEntity getUserById (@PathVariable("id") Long id, @RequestHeader(value = "Authorization")  String token)  throws UserNotFoundException {
         if(checkUser(id, token)) {
             Optional<User> user = userRepository.findById(id);
             if (!user.isPresent()) {
@@ -90,36 +90,41 @@ public class UserController {
 
     //update user
     @PutMapping(path="/{id}")
-    public @ResponseBody ResponseEntity updateUser (@PathVariable("id") Long id, @RequestBody String user, @RequestHeader String token) {
+    public @ResponseBody ResponseEntity updateUser (@PathVariable("id") Long id, @RequestBody String user, @RequestHeader(value = "Authorization") String token) {
         if(checkUser(id, token)) {
-            User updatedUser = userRepository.findById(id).get();
-            JSONObject jsonObject = new JSONObject(user);
             PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            String hashedPassword = passwordEncoder.encode(jsonObject.getString("password"));
-            updatedUser.setPassword(hashedPassword);
-            updatedUser.setFirstName(jsonObject.getString("firstName"));
-            updatedUser.setLastName(jsonObject.getString("lastName"));
-            updatedUser.setNickName(jsonObject.getString("nickName"));
-            updatedUser.setEmail(jsonObject.getString("email"));
-            Date dob = null;
-            try {
-                dob = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("dob"));
-            } catch (ParseException e) {
-                e.printStackTrace();
+            JSONObject jsonObject = new JSONObject(user);
+            User updatedUser = userRepository.findById(id).get();
+            if(passwordEncoder.matches(jsonObject.getString("oldPassword"), updatedUser.getPassword())) {
+                if(!jsonObject.getString("newPassword").equals("") && jsonObject.getString("newPassword") != null) {
+                    String hashedPassword = passwordEncoder.encode(jsonObject.getString("newPassword"));
+                    updatedUser.setPassword(hashedPassword);
+                }
+                updatedUser.setFirstName(jsonObject.getString("firstName"));
+                updatedUser.setLastName(jsonObject.getString("lastName"));
+                updatedUser.setNickName(jsonObject.getString("nickName"));
+                updatedUser.setEmail(jsonObject.getString("email"));
+                Date dob = null;
+                try {
+                    dob = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("dob"));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                updatedUser.setDob(dob);
+                updatedUser.setGender(jsonObject.getBoolean("gender"));
+                userRepository.save(updatedUser);
+                return ResponseEntity.ok(updatedUser);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Incorrect password.");
             }
-            updatedUser.setDob(dob);
-            updatedUser.setGender(jsonObject.getBoolean("gender"));
-            userRepository.save(updatedUser);
-            return ResponseEntity.ok(updatedUser);
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
         }
-
     }
 
     //delete user by ID
     @DeleteMapping(path = "/{id}")
-    public @ResponseBody ResponseEntity deleteUser (@PathVariable("id") Long id, @RequestHeader String token) {
+    public @ResponseBody ResponseEntity deleteUser (@PathVariable("id") Long id, @RequestHeader(value = "Authorization")  String token) {
         if(checkUser(id, token)) {
             userRepository.deleteById(id);
             return ResponseEntity.ok(userRepository.findAll());

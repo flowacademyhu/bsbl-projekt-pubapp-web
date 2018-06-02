@@ -73,7 +73,7 @@ public class SessionController {
     }
 
     @DeleteMapping(path="/{id}")
-    public @ResponseBody ResponseEntity logout(@PathVariable("id") Long id, @RequestHeader String token) {
+    public @ResponseBody ResponseEntity logout(@PathVariable("id") Long id, @RequestHeader(value = "Authorization")  String token) {
         sessionRepository.delete(sessionRepository.findByToken(token));
         return ResponseEntity.ok("LOGGED OUT");
     }
