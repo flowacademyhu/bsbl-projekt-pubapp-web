@@ -99,17 +99,13 @@ public class UserAchievementController {
         for (UserAchievement userAchievement : allUserAchievements) {
             if (userAchievement.getUser().getId().equals(userRepository.findById(user_id).get().getId())) {
                 currentUserAchievements.add(userAchievement);
-                System.out.println(userAchievement.getAchievement().getName());
             }
         }
-        System.out.println("-------------------------");
         if (currentUserAchievements.size() == 0) {
             for (Achievement achievement : completedAchievements) {
                 actuallyCompletedAchievements.add(achievement);
-                System.out.println(achievement.getName());
             }
         } else {
-            System.out.println("-------------------------");
             List<Achievement> alreadyCompletedAchievements = new ArrayList<>();
             for(UserAchievement userAchievement : currentUserAchievements) {
                 alreadyCompletedAchievements.add(userAchievement.getAchievement());
