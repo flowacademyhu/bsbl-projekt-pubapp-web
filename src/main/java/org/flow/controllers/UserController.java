@@ -2,6 +2,7 @@ package org.flow.controllers;
 
 
 import com.google.common.net.HttpHeaders;
+import org.flow.configuration.Timeout;
 import org.flow.models.Achievement;
 import org.flow.models.User;
 import org.flow.repositories.AchievementRepository;
@@ -10,12 +11,15 @@ import org.flow.repositories.UserAchievementRepository;
 import org.flow.repositories.UserRepository;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +41,9 @@ public class UserController {
     @Autowired
     private AchievementRepository achievementRepository;
 
+    @Autowired
+    Timeout timeout = new Timeout();
+
     //get all users
     @GetMapping
     public @ResponseBody ResponseEntity getAllUsers () {
@@ -45,16 +52,20 @@ public class UserController {
 
     //get user by ID
     @GetMapping(path = "/{id}")
-    public @ResponseBody ResponseEntity getUserById (@PathVariable("id") Long id, @RequestHeader(value = "Authorization")  String token)  throws UserNotFoundException {
-        if(checkUser(id, token)) {
-            Optional<User> user = userRepository.findById(id);
-            if (!user.isPresent()) {
-                //throw new UserNotFoundException("User not found.");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found.");
+    public @ResponseBody ResponseEntity getUserById (@PathVariable("id") Long id, @RequestHeader(value = "Authorization") String token)  throws UserNotFoundException {
+        if(timeout.stayingALive(token)) {
+            if (checkUser(id, token)) {
+                Optional<User> user = userRepository.findById(id);
+                if (!user.isPresent()) {
+                    //throw new UserNotFoundException("User not found.");
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found.");
+                }
+                return ResponseEntity.ok(user);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
             }
-            return ResponseEntity.ok(user);
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
+        } else  {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session timeout.");
         }
     }
 
@@ -91,34 +102,38 @@ public class UserController {
     //update user
     @PutMapping(path="/{id}")
     public @ResponseBody ResponseEntity updateUser (@PathVariable("id") Long id, @RequestBody String user, @RequestHeader(value = "Authorization") String token) {
-        if(checkUser(id, token)) {
-            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            JSONObject jsonObject = new JSONObject(user);
-            User updatedUser = userRepository.findById(id).get();
-            if(passwordEncoder.matches(jsonObject.getString("oldPassword"), updatedUser.getPassword())) {
-                if(!jsonObject.getString("newPassword").equals("") && jsonObject.getString("newPassword") != null) {
-                    String hashedPassword = passwordEncoder.encode(jsonObject.getString("newPassword"));
-                    updatedUser.setPassword(hashedPassword);
+        if(timeout.stayingALive(token)) {
+            if(checkUser(id, token)) {
+                PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                JSONObject jsonObject = new JSONObject(user);
+                User updatedUser = userRepository.findById(id).get();
+                if(passwordEncoder.matches(jsonObject.getString("oldPassword"), updatedUser.getPassword())) {
+                    if(!jsonObject.getString("newPassword").equals("") && jsonObject.getString("newPassword") != null) {
+                        String hashedPassword = passwordEncoder.encode(jsonObject.getString("newPassword"));
+                        updatedUser.setPassword(hashedPassword);
+                    }
+                    updatedUser.setFirstName(jsonObject.getString("firstName"));
+                    updatedUser.setLastName(jsonObject.getString("lastName"));
+                    updatedUser.setNickName(jsonObject.getString("nickName"));
+                    updatedUser.setEmail(jsonObject.getString("email"));
+                    Date dob = null;
+                    try {
+                        dob = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("dob"));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    updatedUser.setDob(dob);
+                    updatedUser.setGender(jsonObject.getBoolean("gender"));
+                    userRepository.save(updatedUser);
+                    return ResponseEntity.ok(updatedUser);
+                } else {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Incorrect password.");
                 }
-                updatedUser.setFirstName(jsonObject.getString("firstName"));
-                updatedUser.setLastName(jsonObject.getString("lastName"));
-                updatedUser.setNickName(jsonObject.getString("nickName"));
-                updatedUser.setEmail(jsonObject.getString("email"));
-                Date dob = null;
-                try {
-                    dob = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("dob"));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                updatedUser.setDob(dob);
-                updatedUser.setGender(jsonObject.getBoolean("gender"));
-                userRepository.save(updatedUser);
-                return ResponseEntity.ok(updatedUser);
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Incorrect password.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
             }
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session timeout.");
         }
     }
 

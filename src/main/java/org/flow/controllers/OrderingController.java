@@ -42,14 +42,14 @@ public class OrderingController {
     //create new ordering
     @PostMapping
     public @ResponseBody ResponseEntity addNewOrdering (@RequestHeader String token) {
-        if(userController.isAdmin(token)) {
+        //if(userController.isAdmin(token)) {
             Ordering newOrdering = new Ordering();
             newOrdering.setQrCodePath("qrCodePath");
             orderingRepository.save(newOrdering);
             return ResponseEntity.ok(newOrdering);
-        } else {
+        /*} else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
-        }
+        }*/
     }
 
     //delete ordering by ID

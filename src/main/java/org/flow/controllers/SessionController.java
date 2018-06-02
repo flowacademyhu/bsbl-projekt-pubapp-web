@@ -26,8 +26,6 @@ public class SessionController {
     @Autowired
     private SessionRepository sessionRepository;
 
-    UserController userController = new UserController();
-
     @PostMapping
     public @ResponseBody ResponseEntity login(@RequestBody String login) {
         JSONObject jsonObject = new JSONObject(login);
@@ -39,7 +37,7 @@ public class SessionController {
             session.setToken(token);
             session.setUser(loggedUser);
             Date date = new Date();
-            date.setTime(date.getTime() + 20000);
+            date.setTime(date.getTime() + 300000);
             session.setExpiration(date);
             sessionRepository.save(session);
             long userID = loggedUser.getId();
@@ -63,7 +61,7 @@ public class SessionController {
             session.setToken(token);
             session.setUser(loggedUser);
             Date date = new Date();
-            date.setTime(date.getTime() + 20000);
+            date.setTime(date.getTime() + 40000);
             session.setExpiration(date);
             sessionRepository.save(session);
             return new ResponseEntity<>(token, HttpStatus.OK);
@@ -84,15 +82,5 @@ public class SessionController {
         JSONObject jsonObject = new JSONObject(badlogin);
         sessionRepository.delete(sessionRepository.findByToken(badlogin));
         return ResponseEntity.ok("You don't have permission to this site");
-    }
-
-    public void stayingALive(String token) {
-        Date date = new Date();
-        if(sessionRepository.findByToken(token).getExpiration().before(date)) {
-            sessionRepository.delete(sessionRepository.findByToken(token));
-        } else {
-            date.setTime(date.getTime() + 20000);
-            sessionRepository.findByToken(token).setExpiration(date);
-        }
     }
 }

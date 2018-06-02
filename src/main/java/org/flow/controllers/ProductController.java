@@ -23,11 +23,11 @@ public class ProductController {
     //get all products
     @GetMapping
     public @ResponseBody ResponseEntity findAllProducts (@RequestHeader String token) {
-        if(userController.isAdmin(token)) {
+        //if(userController.isAdmin(token)) {
             return ResponseEntity.ok(productRepository.findAll());
-        } else {
+       /* } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
-        }
+        }*/
     }
 
     // get product by ID

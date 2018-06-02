@@ -30,6 +30,7 @@ public class Session {
     private String token;
 
     @Column(name = "expiration", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date expiration;
 
     @ManyToOne

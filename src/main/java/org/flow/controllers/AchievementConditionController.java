@@ -35,7 +35,7 @@ public class AchievementConditionController {
     //get achievement conditions
     @GetMapping(path = "/{id}/achievement_conditions")
     public @ResponseBody ResponseEntity findAchievementConditions(@PathVariable("id") Long id, @RequestHeader String token) {
-        if(userController.isAdmin(token)) {
+        //if(userController.isAdmin(token)) {
             Iterable<AchievementCondition> allAchievementConditions = achievementConditionRepository.findAll();
             List<AchievementCondition> achievementConditionList = new ArrayList();
             for (AchievementCondition achievementCondition : allAchievementConditions) {
@@ -45,9 +45,9 @@ public class AchievementConditionController {
             }
             Iterable<AchievementCondition> conditions = achievementConditionList;
             return ResponseEntity.ok(conditions);
-        } else {
+        /*} else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
-        }
+        }*/
     }
 
     //get achievement condition by ID
@@ -64,7 +64,7 @@ public class AchievementConditionController {
     //create new achievement condition
     @PostMapping(path="/{id}/achievement_conditions")
     public @ResponseBody ResponseEntity addNewAchievementCondition (@PathVariable("id") Long id, @RequestBody String condition, @RequestHeader String token) {
-        if(userController.isAdmin(token)) {
+        //if(userController.isAdmin(token)) {
             AchievementCondition newAchievementCondition = new AchievementCondition();
             JSONObject jsonObject = new JSONObject(condition);
             newAchievementCondition.setQuantity(jsonObject.getInt("quantity"));
@@ -72,9 +72,9 @@ public class AchievementConditionController {
             newAchievementCondition.setProduct(productRepository.findByName(jsonObject.getString("productName")));
             achievementConditionRepository.save(newAchievementCondition);
             return ResponseEntity.ok(newAchievementCondition);
-        } else {
+        /*} else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
-        }
+        }*/
     }
 
     //update achievement condition

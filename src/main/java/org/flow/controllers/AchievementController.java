@@ -48,13 +48,8 @@ public class AchievementController {
 
     //create new achievement
     @PostMapping
-    public @ResponseBody ResponseEntity addNewAchievement (@RequestBody String achievement
-
-/*, @RequestHeader String token) {
-        if(userController.isAdmin(token)) {
-*/
-) {
-		System.out.println("asfasfasf");
+    public @ResponseBody ResponseEntity addNewAchievement (@RequestBody String achievement, @RequestHeader String token) {
+        //if(userController.isAdmin(token)) {
             JSONObject jsonObject = new JSONObject(achievement);
             Achievement newAchievement = new Achievement();
             newAchievement.setName(jsonObject.getString("name"));
@@ -69,8 +64,8 @@ public class AchievementController {
             newAchievement.setExpiration(expiration);
             achievementRepository.save(newAchievement);
             return ResponseEntity.ok(newAchievement);
-/*
-        } else {
+
+        /*} else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
         }*/
     }
@@ -78,7 +73,7 @@ public class AchievementController {
     //update achievement
     @PutMapping(path="/{id}")
     public @ResponseBody ResponseEntity updateAchievement(@PathVariable("id") Long id, @RequestBody String achievement, @RequestHeader String token) {
-        if(userController.isAdmin(token)) {
+        //if(userController.isAdmin(token)) {
             Achievement updatedAchievement = achievementRepository.findById(id).get();
             JSONObject jsonObject = new JSONObject(achievement);
             updatedAchievement.setName(jsonObject.getString("name"));
@@ -93,9 +88,9 @@ public class AchievementController {
             updatedAchievement.setExpiration(expiration);
             achievementRepository.save(updatedAchievement);
             return ResponseEntity.ok(updatedAchievement);
-        } else {
+        /*} else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
-        }
+        }*/
     }
 
     //delete achievement by ID

@@ -33,7 +33,7 @@ public class OrderLineController {
     //get all orderLines for the current ordering
     @GetMapping(path="/{id}/orderlines")
     public @ResponseBody ResponseEntity findOrderLines (@PathVariable("id") Long id, @RequestHeader String token) {
-        if(userController.isAdmin(token)) {
+        //if(userController.isAdmin(token)) {
             Iterable<OrderLine> allOrderLines = orderLineRepository.findAll();
             List<OrderLine> orderLineList = new ArrayList<>();
             for (OrderLine orderLine : allOrderLines) {
@@ -43,9 +43,9 @@ public class OrderLineController {
             }
             Iterable<OrderLine> lines = orderLineList;
             return ResponseEntity.ok(lines);
-        } else {
+        /*} else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
-        }
+        }*/
 
     }
 
@@ -53,19 +53,19 @@ public class OrderLineController {
     //get orderLine by ID
     @GetMapping(path="/{id}/orderlines/{id2}")
     public @ResponseBody ResponseEntity getOrderLineById (@PathVariable("id") Long id, @PathVariable("id2") Long id2, @RequestHeader String token) {
-        if(userController.isAdmin(token)) {
+        //if(userController.isAdmin(token)) {
             Optional<OrderLine> orderLine = orderLineRepository.findById(id2);
             return ResponseEntity.ok(orderLine);
-        } else {
+        /*} else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
-        }
+        }*/
 
     }
 
     //create new orderLine
     @PostMapping(path="/{id}/orderlines")
     public @ResponseBody ResponseEntity addNewOrderLine (@PathVariable("id") Long orderId, @RequestBody String orderLine, @RequestHeader String token) {
-        if(userController.isAdmin(token)) {
+        //*if(userController.isAdmin(token)) {
             OrderLine newOrderLine = new OrderLine();
             JSONObject jsonObject = new JSONObject(orderLine);
             newOrderLine.setOrdering(orderingRepository.findById(orderId).get());
@@ -73,24 +73,24 @@ public class OrderLineController {
             newOrderLine.setQuantity(jsonObject.getInt("quantity"));
             orderLineRepository.save(newOrderLine);
             return ResponseEntity.ok(newOrderLine);
-        } else {
+        /*} else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
-        }
+        }*/
     }
 
     //update orderLine
     @PutMapping(path="/{id}/orderlines/{id2}")
     public @ResponseBody ResponseEntity updateOrderLine (@PathVariable("id2") Long id, @RequestBody String orderLine, @RequestHeader String token) {
-        if(userController.isAdmin(token)) {
+        //if(userController.isAdmin(token)) {
             OrderLine updatedOrderLine = orderLineRepository.findById(id).get();
             JSONObject jsonObject = new JSONObject(orderLine);
             updatedOrderLine.setProduct(productRepository.findByName(jsonObject.getString("productName")));
             updatedOrderLine.setQuantity(jsonObject.getInt("quantity"));
             orderLineRepository.save(updatedOrderLine);
             return ResponseEntity.ok(updatedOrderLine);
-        } else {
+        /*} else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
-        }
+        }*/
     }
 
 
