@@ -2,7 +2,11 @@ package org.flow.controllers;
 
 import org.flow.configuration.Validations;
 import org.flow.models.Achievement;
+import org.flow.models.UserAchievement;
 import org.flow.repositories.AchievementRepository;
+import org.flow.repositories.SessionRepository;
+import org.flow.repositories.UserAchievementRepository;
+import org.flow.repositories.UserRepository;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -13,7 +17,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -22,6 +28,12 @@ public class AchievementController {
 
     @Autowired
     private AchievementRepository achievementRepository;
+    @Autowired
+    private SessionRepository sessionRepository;
+    @Autowired
+    private UserAchievementRepository userAchievementRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     Validations validations = new Validations();
@@ -30,6 +42,33 @@ public class AchievementController {
     @GetMapping
     public @ResponseBody ResponseEntity getAllAchievements() {
         return ResponseEntity.ok(achievementRepository.findAll());
+    }
+
+    //get all active achievements
+    @GetMapping(path = "/active")
+    public @ResponseBody ResponseEntity getAllActiveAchievements(@RequestHeader(value = "Authorization") String token) {
+        long id = sessionRepository.findByToken(token).getUser().getId();
+        Iterable<UserAchievement> allUserAchievements = userAchievementRepository.findAll();
+        List<UserAchievement> userAchievements = new ArrayList<>();
+        List<Achievement> ownAchievements = new ArrayList<>();
+        for (UserAchievement userAchievement : allUserAchievements) {
+            if (userAchievement.getUser().getId().equals(userRepository.findById(id).get().getId())) {
+                userAchievements.add(userAchievement);
+            }
+        }
+        for (UserAchievement userAchievement : userAchievements) {
+            Optional<Achievement> achievement = achievementRepository.findById(userAchievement.getAchievement().getId());
+            ownAchievements.add(achievement.get());
+
+        }
+        Date now = new Date();
+        Iterable<Achievement> allActiveAchievements = achievementRepository.findByExpirationAfter(now);
+        List<Achievement> allActiveAchievementsList = new ArrayList<>();
+        for(Achievement achievement : allActiveAchievements) {
+            allActiveAchievementsList.add(achievement);
+        }
+        allActiveAchievementsList.removeAll(ownAchievements);
+        return ResponseEntity.ok(allActiveAchievementsList);
     }
 
     //get achievement by ID
