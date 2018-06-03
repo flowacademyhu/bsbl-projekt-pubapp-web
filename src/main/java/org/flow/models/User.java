@@ -58,6 +58,9 @@ public class User {
     @Column(name = "gender", nullable = false)
     private Boolean gender;
 
+    @Column(name = "xp", nullable = false)
+    private int xp;
+
     public Long getId() {
         return id;
     }
@@ -146,4 +149,11 @@ public class User {
         this.gender = gender;
     }
 
+    public int getXp() {
+        return xp;
+    }
+
+    public void setXp(int xp) {
+        this.xp = xp;
+    }
 }

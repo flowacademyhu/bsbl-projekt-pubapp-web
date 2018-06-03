@@ -36,7 +36,7 @@ public class UserAchievementController {
 
     @GetMapping(path = "/{id}/user_achievements")
     public @ResponseBody
-    ResponseEntity getUserAchievemnets(@PathVariable("id") Long id, @RequestHeader String token) {
+    ResponseEntity getUserAchievemnets(@PathVariable("id") Long id, @RequestHeader(value = "Authorization") String token) {
         if (userController.checkUser(id, token)) {
             Iterable<UserAchievement> allUserAchievements = userAchievementRepository.findAll();
             List<UserAchievement> userAchievements = new ArrayList<>();
@@ -61,12 +61,15 @@ public class UserAchievementController {
     public @ResponseBody
     ResponseEntity createUserAchievement(@PathVariable("id") Long user_id,
                                          @RequestParam Long order_id) {
+        User user = userRepository.findById(user_id).get();
+        int userXP = user.getXp();
         Ordering order = orderingRepository.findById(order_id).get();
         Iterable<OrderLine> allOrderlines = orderLineRepository.findAll();
         List<OrderLine> orderLines = new ArrayList<>();
         for (OrderLine orderLine : allOrderlines) {
             if (orderLine.getOrdering().getId().equals(order.getId())) {
                 orderLines.add(orderLine);
+                userXP += orderLine.getProduct().getXpValue() * orderLine.getQuantity();
             }
         }
         Date now = new Date();
@@ -121,7 +124,10 @@ public class UserAchievementController {
             newUserAchievement.setUser(userRepository.findById(user_id).get());
             newUserAchievement.setAchievement(achievement);
             userAchievementRepository.save(newUserAchievement);
+            userXP += achievement.getXpValue();
         }
+        user.setXp(userXP);
+        userRepository.save(user);
         return ResponseEntity.ok("Achievements added.");
     }
 }
