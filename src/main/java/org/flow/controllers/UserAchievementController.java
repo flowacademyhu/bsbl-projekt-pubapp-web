@@ -1,5 +1,6 @@
 package org.flow.controllers;
 
+import org.flow.configuration.Validations;
 import org.flow.models.*;
 import org.flow.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +33,13 @@ public class UserAchievementController {
     @Autowired
     private OrderLineRepository orderLineRepository;
 
-    UserController userController = new UserController();
+    @Autowired
+    Validations validations = new Validations();
 
     @GetMapping(path = "/{id}/user_achievements")
     public @ResponseBody
     ResponseEntity getUserAchievemnets(@PathVariable("id") Long id, @RequestHeader(value = "Authorization") String token) {
-        if (userController.checkUser(id, token)) {
+        if (validations.checkUser(id, token)) {
             Iterable<UserAchievement> allUserAchievements = userAchievementRepository.findAll();
             List<UserAchievement> userAchievements = new ArrayList<>();
             List<Optional<Achievement>> achievements = new ArrayList<>();

@@ -1,5 +1,6 @@
 package org.flow.controllers;
 
+import org.flow.configuration.Validations;
 import org.flow.models.Product;
 import org.flow.repositories.ProductRepository;
 import org.json.JSONObject;
@@ -18,12 +19,13 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
-    UserController userController = new UserController();
+    @Autowired
+    Validations validations = new Validations();
 
     //get all products
     @GetMapping
     public @ResponseBody ResponseEntity findAllProducts (@RequestHeader String token) {
-        //if(userController.isAdmin(token)) {
+        //if(validations.isAdmin(token)) {
             return ResponseEntity.ok(productRepository.findAll());
        /* } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
@@ -33,7 +35,7 @@ public class ProductController {
     // get product by ID
     @GetMapping(path="/{id}")
     public @ResponseBody ResponseEntity getProductById (@PathVariable("id") Long id, @RequestHeader String token) {
-        if(userController.isAdmin(token)) {
+        if(validations.isAdmin(token)) {
             Optional<Product> product = productRepository.findById(id);
             return ResponseEntity.ok(product);
         } else {
@@ -45,7 +47,7 @@ public class ProductController {
     @PostMapping
     public @ResponseBody ResponseEntity addNewProduct (@RequestBody String product
 /*, @RequestHeader String token) {
-        if(userController.isAdmin(token)) {
+        if(validations.isAdmin(token)) {
 */
 
 ) {
@@ -66,7 +68,7 @@ public class ProductController {
     // update product
     @PutMapping(path="/{id}")
     public @ResponseBody ResponseEntity updateProduct (@PathVariable("id") Long id, @RequestBody String product,  @RequestHeader String token) {
-        if(userController.isAdmin(token)) {
+        if(validations.isAdmin(token)) {
             JSONObject jsonObject = new JSONObject(product);
             Product updatedProduct = productRepository.findById(id).get();
             updatedProduct.setName(jsonObject.getString("name"));
@@ -84,7 +86,7 @@ public class ProductController {
     //delete product by ID
     @DeleteMapping(path="/{id}")
     public @ResponseBody ResponseEntity deleteProduct (@PathVariable("id") Long id, @RequestHeader String token) {
-        if(userController.isAdmin(token)) {
+        if(validations.isAdmin(token)) {
             productRepository.deleteById(id);
             return ResponseEntity.ok(productRepository.findAll());
         } else {

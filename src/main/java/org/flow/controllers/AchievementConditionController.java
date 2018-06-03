@@ -1,5 +1,6 @@
 package org.flow.controllers;
 
+import org.flow.configuration.Validations;
 import org.flow.models.Achievement;
 import org.flow.models.AchievementCondition;
 import org.flow.repositories.AchievementConditionRepository;
@@ -30,12 +31,13 @@ public class AchievementConditionController {
     @Autowired
     private ProductRepository productRepository;
 
-    UserController userController = new UserController();
+    @Autowired
+    Validations validations = new Validations();
 
     //get achievement conditions
     @GetMapping(path = "/{id}/achievement_conditions")
     public @ResponseBody ResponseEntity findAchievementConditions(@PathVariable("id") Long id, @RequestHeader String token) {
-        //if(userController.isAdmin(token)) {
+        //if(validations.isAdmin(token)) {
             Iterable<AchievementCondition> allAchievementConditions = achievementConditionRepository.findAll();
             List<AchievementCondition> achievementConditionList = new ArrayList();
             for (AchievementCondition achievementCondition : allAchievementConditions) {
@@ -53,7 +55,7 @@ public class AchievementConditionController {
     //get achievement condition by ID
     @GetMapping(path = "/{id}/achievement_conditions/{id2}")
     public @ResponseBody ResponseEntity getAchievementConditionById(@PathVariable("id") Long id2, @RequestHeader String token) throws AchievementNotFoundException {
-        if(userController.isAdmin(token)) {
+        if(validations.isAdmin(token)) {
             Optional<AchievementCondition> achievementCondition = achievementConditionRepository.findById(id2);
             return ResponseEntity.ok(achievementCondition);
         } else {
@@ -64,7 +66,7 @@ public class AchievementConditionController {
     //create new achievement condition
     @PostMapping(path="/{id}/achievement_conditions")
     public @ResponseBody ResponseEntity addNewAchievementCondition (@PathVariable("id") Long id, @RequestBody String condition, @RequestHeader String token) {
-        //if(userController.isAdmin(token)) {
+        //if(validations.isAdmin(token)) {
             AchievementCondition newAchievementCondition = new AchievementCondition();
             JSONObject jsonObject = new JSONObject(condition);
             newAchievementCondition.setQuantity(jsonObject.getInt("quantity"));
@@ -81,7 +83,7 @@ public class AchievementConditionController {
     @PutMapping(path="/{id}/achievement_conditions/{id2}")
     public @ResponseBody ResponseEntity updateAchievementCondition(@PathVariable("id2") Long id,
                                                                          @RequestBody String condition, @RequestHeader String token) {
-        if(userController.isAdmin(token)) {
+        if(validations.isAdmin(token)) {
             AchievementCondition achievementCondition = achievementConditionRepository.findById(id).get();
             JSONObject jsonObject = new JSONObject(condition);
             achievementCondition.setQuantity(jsonObject.getInt("quantity"));
@@ -96,7 +98,7 @@ public class AchievementConditionController {
     //delete achievement condition
     @DeleteMapping(path="/{id}/achievement_conditions/{id2}")
     public @ResponseBody ResponseEntity deleteAchievementCondition(@PathVariable("id2") Long id2, @RequestHeader String token) {
-        if(userController.isAdmin(token)) {
+        if(validations.isAdmin(token)) {
             achievementConditionRepository.deleteById(id2);
             return ResponseEntity.ok(achievementConditionRepository.findAll());
         } else {

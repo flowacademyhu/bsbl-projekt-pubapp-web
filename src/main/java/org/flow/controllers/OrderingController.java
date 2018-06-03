@@ -1,4 +1,5 @@
 package org.flow.controllers;
+import org.flow.configuration.Validations;
 import org.flow.models.Ordering;
 import org.flow.repositories.OrderingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +16,13 @@ public class OrderingController {
     @Autowired
     private OrderingRepository orderingRepository;
 
-    UserController userController = new UserController();
+    @Autowired
+    Validations validations = new Validations();
 
     //get all orderings
     @GetMapping
     public @ResponseBody ResponseEntity findAllProducts (@RequestHeader String token) {
-        if(userController.isAdmin(token)) {
+        if(validations.isAdmin(token)) {
             return ResponseEntity.ok(orderingRepository.findAll());
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
@@ -30,7 +32,7 @@ public class OrderingController {
     // get ordering by ID
     @GetMapping(path="/{id}")
     public @ResponseBody ResponseEntity getProductById (@PathVariable("id") Long id, @RequestHeader String token) {
-        if(userController.isAdmin(token)) {
+        if(validations.isAdmin(token)) {
             Optional<Ordering> ordering = orderingRepository.findById(id);
             return ResponseEntity.ok(ordering);
         } else {
@@ -42,7 +44,7 @@ public class OrderingController {
     //create new ordering
     @PostMapping
     public @ResponseBody ResponseEntity addNewOrdering (@RequestHeader String token) {
-        //if(userController.isAdmin(token)) {
+        //if(validations.isAdmin(token)) {
             Ordering newOrdering = new Ordering();
             newOrdering.setQrCodePath("qrCodePath");
             orderingRepository.save(newOrdering);
@@ -55,7 +57,7 @@ public class OrderingController {
     //delete ordering by ID
     @DeleteMapping(path = "/{id}")
     public @ResponseBody ResponseEntity deleteOrdering (@PathVariable("id") Long id, @RequestHeader String token) {
-        if(userController.isAdmin(token)) {
+        if(validations.isAdmin(token)) {
             orderingRepository.deleteById(id);
             return ResponseEntity.ok(orderingRepository.findAll());
         } else {

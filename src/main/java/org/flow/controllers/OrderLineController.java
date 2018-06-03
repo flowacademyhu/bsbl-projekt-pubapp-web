@@ -1,5 +1,6 @@
 package org.flow.controllers;
 
+import org.flow.configuration.Validations;
 import org.flow.models.OrderLine;
 import org.flow.models.Ordering;
 import org.flow.models.Product;
@@ -28,12 +29,13 @@ public class OrderLineController {
     @Autowired
     private ProductRepository productRepository;
 
-    UserController userController = new UserController();
+    @Autowired
+    Validations validations = new Validations();
 
     //get all orderLines for the current ordering
     @GetMapping(path="/{id}/orderlines")
     public @ResponseBody ResponseEntity findOrderLines (@PathVariable("id") Long id, @RequestHeader String token) {
-        //if(userController.isAdmin(token)) {
+        //if(validations.isAdmin(token)) {
             Iterable<OrderLine> allOrderLines = orderLineRepository.findAll();
             List<OrderLine> orderLineList = new ArrayList<>();
             for (OrderLine orderLine : allOrderLines) {
@@ -53,7 +55,7 @@ public class OrderLineController {
     //get orderLine by ID
     @GetMapping(path="/{id}/orderlines/{id2}")
     public @ResponseBody ResponseEntity getOrderLineById (@PathVariable("id") Long id, @PathVariable("id2") Long id2, @RequestHeader String token) {
-        //if(userController.isAdmin(token)) {
+        //if(validations.isAdmin(token)) {
             Optional<OrderLine> orderLine = orderLineRepository.findById(id2);
             return ResponseEntity.ok(orderLine);
         /*} else {
@@ -65,7 +67,7 @@ public class OrderLineController {
     //create new orderLine
     @PostMapping(path="/{id}/orderlines")
     public @ResponseBody ResponseEntity addNewOrderLine (@PathVariable("id") Long orderId, @RequestBody String orderLine, @RequestHeader String token) {
-        //*if(userController.isAdmin(token)) {
+        //*if(validations.isAdmin(token)) {
             OrderLine newOrderLine = new OrderLine();
             JSONObject jsonObject = new JSONObject(orderLine);
             newOrderLine.setOrdering(orderingRepository.findById(orderId).get());
@@ -81,7 +83,7 @@ public class OrderLineController {
     //update orderLine
     @PutMapping(path="/{id}/orderlines/{id2}")
     public @ResponseBody ResponseEntity updateOrderLine (@PathVariable("id2") Long id, @RequestBody String orderLine, @RequestHeader String token) {
-        //if(userController.isAdmin(token)) {
+        //if(validations.isAdmin(token)) {
             OrderLine updatedOrderLine = orderLineRepository.findById(id).get();
             JSONObject jsonObject = new JSONObject(orderLine);
             updatedOrderLine.setProduct(productRepository.findByName(jsonObject.getString("productName")));
@@ -97,7 +99,7 @@ public class OrderLineController {
     //delete orderLine by ID
     @DeleteMapping(path = "/{id}/orderlines/{id2}")
     public @ResponseBody ResponseEntity deleteOrderLine (@PathVariable("id") Long orderId, @PathVariable("id2") Long id, @RequestHeader String token) {
-        if(userController.isAdmin(token)) {
+        if(validations.isAdmin(token)) {
             orderLineRepository.deleteById(id);
             return ResponseEntity.ok(orderLineRepository.findAll());
         } else {

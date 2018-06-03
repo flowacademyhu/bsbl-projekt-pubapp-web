@@ -1,9 +1,7 @@
 package org.flow.controllers;
 
 
-import com.google.common.net.HttpHeaders;
-import org.flow.configuration.Timeout;
-import org.flow.models.Achievement;
+import org.flow.configuration.Validations;
 import org.flow.models.User;
 import org.flow.repositories.AchievementRepository;
 import org.flow.repositories.SessionRepository;
@@ -11,18 +9,12 @@ import org.flow.repositories.UserAchievementRepository;
 import org.flow.repositories.UserRepository;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -42,7 +34,7 @@ public class UserController {
     private AchievementRepository achievementRepository;
 
     @Autowired
-    Timeout timeout = new Timeout();
+    Validations validations = new Validations();
 
     //get all users
     @GetMapping
@@ -53,8 +45,8 @@ public class UserController {
     //get user by ID
     @GetMapping(path = "/{id}")
     public @ResponseBody ResponseEntity getUserById (@PathVariable("id") Long id, @RequestHeader(value = "Authorization") String token)  throws UserNotFoundException {
-        if(timeout.stayingALive(token)) {
-            if (checkUser(id, token)) {
+        if(validations.stayingALive(token)) {
+            if (validations.checkUser(id, token)) {
                 Optional<User> user = userRepository.findById(id);
                 if (!user.isPresent()) {
                     //throw new UserNotFoundException("User not found.");
@@ -65,7 +57,7 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
             }
         } else  {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session timeout.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session validations.");
         }
     }
 
@@ -102,8 +94,8 @@ public class UserController {
     //update user
     @PutMapping(path="/{id}")
     public @ResponseBody ResponseEntity updateUser (@PathVariable("id") Long id, @RequestBody String user, @RequestHeader(value = "Authorization") String token) {
-        if(timeout.stayingALive(token)) {
-            if(checkUser(id, token)) {
+        if(validations.stayingALive(token)) {
+            if(validations.checkUser(id, token)) {
                 PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
                 JSONObject jsonObject = new JSONObject(user);
                 User updatedUser = userRepository.findById(id).get();
@@ -133,27 +125,19 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
             }
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session timeout.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session validations.");
         }
     }
 
     //delete user by ID
     @DeleteMapping(path = "/{id}")
     public @ResponseBody ResponseEntity deleteUser (@PathVariable("id") Long id, @RequestHeader(value = "Authorization")  String token) {
-        if(checkUser(id, token)) {
+        if(validations.checkUser(id, token)) {
             userRepository.deleteById(id);
             return ResponseEntity.ok(userRepository.findAll());
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
         }
 
-    }
-
-    public boolean checkUser(Long id, String token) {
-        return sessionRepository.findByToken(token).getUser().getId() == id;
-    }
-
-    public boolean isAdmin(String token) {
-        return String.valueOf(sessionRepository.findByToken(token).getUser().getRoleType()).equals("ADMIN");
     }
 }

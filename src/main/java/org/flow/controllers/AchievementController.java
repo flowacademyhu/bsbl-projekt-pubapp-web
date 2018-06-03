@@ -1,5 +1,6 @@
 package org.flow.controllers;
 
+import org.flow.configuration.Validations;
 import org.flow.models.Achievement;
 import org.flow.repositories.AchievementRepository;
 import org.json.JSONObject;
@@ -22,7 +23,8 @@ public class AchievementController {
     @Autowired
     private AchievementRepository achievementRepository;
 
-    UserController userController = new UserController();
+    @Autowired
+    Validations validations = new Validations();
 
     //get all achievements
     @GetMapping
@@ -33,7 +35,7 @@ public class AchievementController {
     //get achievement by ID
     @GetMapping(path = "/{id}")
     public @ResponseBody ResponseEntity getAchievementById (@PathVariable("id") Long id, @RequestHeader String token)  throws AchievementNotFoundException {
-        if(userController.isAdmin(token)) {
+        if(validations.isAdmin(token)) {
             Optional<Achievement> achievement = achievementRepository.findById(id);
             if (!achievement.isPresent()) {
                 //throw new AchievementNotFoundException("Achievement not found.");
@@ -49,7 +51,7 @@ public class AchievementController {
     //create new achievement
     @PostMapping
     public @ResponseBody ResponseEntity addNewAchievement (@RequestBody String achievement, @RequestHeader String token) {
-        //if(userController.isAdmin(token)) {
+        //if(validations.isAdmin(token)) {
             JSONObject jsonObject = new JSONObject(achievement);
             Achievement newAchievement = new Achievement();
             newAchievement.setName(jsonObject.getString("name"));
@@ -73,7 +75,7 @@ public class AchievementController {
     //update achievement
     @PutMapping(path="/{id}")
     public @ResponseBody ResponseEntity updateAchievement(@PathVariable("id") Long id, @RequestBody String achievement, @RequestHeader String token) {
-        //if(userController.isAdmin(token)) {
+        //if(validations.isAdmin(token)) {
             Achievement updatedAchievement = achievementRepository.findById(id).get();
             JSONObject jsonObject = new JSONObject(achievement);
             updatedAchievement.setName(jsonObject.getString("name"));
@@ -96,7 +98,7 @@ public class AchievementController {
     //delete achievement by ID
     @DeleteMapping(path = "/{id}")
     public @ResponseBody ResponseEntity deleteAchievement(@PathVariable("id") Long id, @RequestHeader String token) {
-        if(userController.isAdmin(token)) {
+        if(validations.isAdmin(token)) {
             achievementRepository.deleteById(id);
             return ResponseEntity.ok(achievementRepository.findAll());
         } else {
