@@ -27,7 +27,7 @@ public class ProductController {
     public @ResponseBody ResponseEntity findAllProducts (){
         //@RequestHeader String token) {
         //if(validations.isAdmin(token)) {
-            return ResponseEntity.ok(productRepository.findAll());
+            return ResponseEntity.ok(productRepository.findAllByOrderByCategoryAscNameAsc());
        /* } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
         }*/

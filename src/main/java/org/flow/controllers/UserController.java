@@ -39,7 +39,7 @@ public class UserController {
     //get all users
     @GetMapping
     public @ResponseBody ResponseEntity getAllUsers () {
-        return ResponseEntity.ok(userRepository.findAll());
+        return ResponseEntity.ok(userRepository.findAllByOrderByLastNameAsc());
     }
 
     //get user by ID

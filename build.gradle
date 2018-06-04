@@ -36,6 +36,8 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+    // https://mvnrepository.com/artifact/net.imagej/ij
+    compile group: 'net.imagej', name: 'ij', version: '1.52b'
     // https://mvnrepository.com/artifact/com.google.zxing/core
     compile group: 'com.google.zxing', name: 'core', version: '3.3.2'
     // https://mvnrepository.com/artifact/com.google.zxing/javase

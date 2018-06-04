@@ -62,10 +62,10 @@ public class UserAchievementController {
     @PostMapping(path = "/{id}")
     public @ResponseBody
     ResponseEntity createUserAchievement(@PathVariable("id") Long user_id,
-                                         @RequestParam Long order_id) {
+                                         @RequestParam String qrCodePath) {
         User user = userRepository.findById(user_id).get();
         int userXP = user.getXp();
-        Ordering order = orderingRepository.findById(order_id).get();
+        Ordering order = orderingRepository.findByQrCodePath(qrCodePath);
         Iterable<OrderLine> allOrderlines = orderLineRepository.findAll();
         List<OrderLine> orderLines = new ArrayList<>();
         for (OrderLine orderLine : allOrderlines) {

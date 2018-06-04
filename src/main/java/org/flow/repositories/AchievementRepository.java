@@ -7,5 +7,6 @@ import java.util.Date;
 
 public interface AchievementRepository extends CrudRepository<Achievement, Long> {
     Iterable<Achievement> findByExpirationAfter(Date now);
-
+    Iterable<Achievement> findAllByOrderByExpirationAsc();
+    Iterable<Achievement> findByExpirationBefore(Date now);
 }
