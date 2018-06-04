@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import FormFields from './widgets/forms/FormFields';
 import axios from 'axios'
 
-class User extends Component {
+class Registration extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -105,7 +105,7 @@ class User extends Component {
                     config: {
                         name: 'gender_input',
                         options: [
-                            { val: '0', text: 'select gender'},
+                            { val: '0', text: 'select gender' },
                             { val: true, text: 'male' },
                             { val: false, text: 'female' }
                         ],
@@ -157,7 +157,6 @@ class User extends Component {
         let fromIsValid = true;
         console.log(dataToSubmit)
         let data = JSON.stringify(dataToSubmit)
-
         for (let key in this.state.formData) {
             fromIsValid = this.state.formData[key].valid && fromIsValid;
         }
@@ -210,4 +209,4 @@ class User extends Component {
     }
 }
 
-export default User;
+export default Registration;

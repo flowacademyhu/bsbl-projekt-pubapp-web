@@ -1,40 +1,65 @@
 import React from 'react';
-import MyHeader from './../header/header';
 import axios from 'axios';
+import MyHeader from './../header/header';
+
+
 export default class Products extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
-      alist: ''
+      items: []
     };
   }
-  async getlist () {
-    await axios.get('http://127.0.0.1:8080/products')
-      .then(response => {
-        const list = 'res.data.blabla';
-        this.setState({ alist: list });
+
+  componentDidMount() {
+    var config = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      crossdomain: true
+    };
+
+    axios
+      .get('http://127.0.0.1:8080/products', { headers: config })
+      .then(({ data }) => {
+        console.log(data);
+        this.setState(
+          { items: data }
+        );
+      })
+      .catch(function (error) {
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log('Error', error.message);
+        }
+        console.log(error.config);
+        console.log(error);
       });
-  }
-  //  golist () {  }
-  _renderCountries (country, index) {
-    return <li key={index}>{country.name} - {country.subregion}</li>;
   }
 
   render () {
-    const { countries } = this.state;
+    console.log(this.state);
     return (
       <div>
-        <div>
-          <MyHeader />
-        </div>
-        <h1>LIST OF COUNTRIES:</h1>
-        <ul>
-          {
-            countries
-              ? countries.map(this._renderCountries)
-              : 'no data to display'
-          }
-        </ul>      </div>
+        <MyHeader />
+        <h3>Products</h3>
+        <ul>List of all the products: {this.renderUsers()}</ul>
+      </div>
     );
+  }
+
+  renderUsers() {
+    console.log(this.state.items);
+    const renderProducts = this.state.items.map(function (product, i) {
+      return <li key={product.id}>Category: {product.category}, Name: {product.name}, Price: {product.price}, xpValue: {product.xpValue})
+      </li>;
+    });
+
+    return renderProducts;
   }
 }

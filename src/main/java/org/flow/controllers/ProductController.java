@@ -24,7 +24,8 @@ public class ProductController {
 
     //get all products
     @GetMapping
-    public @ResponseBody ResponseEntity findAllProducts (@RequestHeader String token) {
+    public @ResponseBody ResponseEntity findAllProducts (){
+        //@RequestHeader String token) {
         //if(validations.isAdmin(token)) {
             return ResponseEntity.ok(productRepository.findAll());
        /* } else {

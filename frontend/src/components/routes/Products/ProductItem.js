@@ -1,6 +1,7 @@
 import React from 'react';
 import FormFields from '../widgets/forms/FormFields';
-import axios from 'axios'; export default class ProductItem extends React.Component {
+import axios from 'axios';
+export default class ProductItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {

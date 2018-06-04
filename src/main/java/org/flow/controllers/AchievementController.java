@@ -89,7 +89,9 @@ public class AchievementController {
 
     //create new achievement
     @PostMapping
-    public @ResponseBody ResponseEntity addNewAchievement (@RequestBody String achievement, @RequestHeader String token) {
+    public @ResponseBody ResponseEntity addNewAchievement (@RequestBody String achievement
+    ){
+    //, @RequestHeader String token) {
         //if(validations.isAdmin(token)) {
             JSONObject jsonObject = new JSONObject(achievement);
             Achievement newAchievement = new Achievement();
