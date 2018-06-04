@@ -7,8 +7,6 @@ import com.google.zxing.client.j2se.MatrixToImageConfig;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
-import ij.IJ;
-import ij.ImagePlus;
 import org.apache.commons.lang.RandomStringUtils;
 import org.flow.models.Ordering;
 import org.flow.repositories.OrderingRepository;
