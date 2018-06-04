@@ -66,27 +66,15 @@ public class OrderingController {
     }
 
     @GetMapping(path="/{id}/generate")
-    public @ResponseBody ResponseEntity generateCode (@PathVariable("id") Long id, @RequestHeader(value = "Authorization") String token) {
-        String data = id.toString();
-        System.out.println(data);
-        Ordering order = orderingRepository.findById(id).get();
-        Iterable<OrderLine> allOrderlines = orderLineRepository.findAll();
-        for (OrderLine orderLine : allOrderlines) {
-            if (orderLine.getOrdering().getId().equals(order.getId())) {
-                data += "." + orderLine.getProduct().getName();
-                data += "." + orderLine.getQuantity().toString();
-                System.out.println(data);
-            }
-        }
+    public @ResponseBody ResponseEntity generateCode (@PathVariable("id") Long id) {
         try {
-            qrcGenerator.generateQRCode(data.toString());
+            qrcGenerator.generateQRCode(id);
         } catch (WriterException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(data);
-        return ResponseEntity.ok(data);
+        return ResponseEntity.ok(id + ". order's qr code saved");
     }
 
     //delete ordering by ID
