@@ -32,7 +32,7 @@ public class OrderingController {
 
     //get all orderings
     @GetMapping
-    public @ResponseBody ResponseEntity findAllProducts (@RequestHeader(value = "Authorization") String token) {
+    public @ResponseBody ResponseEntity findAllOrders (@RequestHeader(value = "Authorization") String token) {
         if(validations.isAdmin(token)) {
             return ResponseEntity.ok(orderingRepository.findAll());
         } else {

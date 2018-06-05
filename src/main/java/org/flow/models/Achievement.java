@@ -37,7 +37,7 @@ public class Achievement {
     private int xpValue;
 
     @Column(name = "expiration", nullable = false)
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @Temporal(TemporalType.DATE)
     private Date expiration;
 
     public Long getId() {

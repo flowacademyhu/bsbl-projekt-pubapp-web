@@ -4,4 +4,5 @@ import org.flow.models.Ordering;
 import org.springframework.data.repository.CrudRepository;
 
 public interface OrderingRepository extends CrudRepository<Ordering, Long>{
+    Ordering findByQrCodePath(String path);
 }

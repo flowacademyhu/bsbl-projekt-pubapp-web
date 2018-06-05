@@ -3,6 +3,7 @@ package org.flow.qr_code;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageConfig;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
@@ -12,11 +13,14 @@ import org.flow.repositories.OrderingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static com.google.zxing.client.j2se.MatrixToImageWriter.toBufferedImage;
 
 
 @Component
@@ -35,14 +39,12 @@ public class QRCGenerator {
         hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
         String rndchars = RandomStringUtils.randomAlphanumeric(4);
         String uniquefilename = new SimpleDateFormat("'QR_'yyyyMMdd-HHmm'_'").format(new Date());
-        Path path = FileSystems.getDefault().getPath("myQRcodes/", uniquefilename + rndchars);
-        BitMatrix bitMatrix = qrCodeWriter.encode(path.toString(), BarcodeFormat.QR_CODE, size, size, hints);
-        //BitMatrix bitMatrix = qrCodeWriter.encode(data, BarcodeFormat.QR_CODE, size, size, hints);
+        Path path = FileSystems.getDefault().getPath("myQRcodes/", uniquefilename + rndchars + ".png");
+        BitMatrix bitMatrix = qrCodeWriter.encode(path.toString().split("/")[1], BarcodeFormat.QR_CODE, size, size, hints);
         MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
         Ordering generated = orderingRepository.findById(id).get();
-        generated.setQrCodePath(path.toString());
+        generated.setQrCodePath(path.toString().split("/")[1]);
         orderingRepository.save(generated);
-
     }
 }
 

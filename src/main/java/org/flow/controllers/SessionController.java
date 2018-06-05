@@ -45,7 +45,7 @@ public class SessionController {
             System.out.println(credentials);
             return new ResponseEntity<>(credentials, HttpStatus.OK);
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("E-mail and password do not match.");
         }
     }
 

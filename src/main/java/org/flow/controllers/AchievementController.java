@@ -41,7 +41,7 @@ public class AchievementController {
     //get all achievements
     @GetMapping
     public @ResponseBody ResponseEntity getAllAchievements() {
-        return ResponseEntity.ok(achievementRepository.findAll());
+        return ResponseEntity.ok(achievementRepository.findAllByOrderByExpirationAsc());
     }
 
     //get all active achievements
@@ -62,11 +62,17 @@ public class AchievementController {
 
         }
         Date now = new Date();
-        Iterable<Achievement> allActiveAchievements = achievementRepository.findByExpirationAfter(now);
+        Iterable<Achievement> allAchievements = achievementRepository.findAllByOrderByExpirationAsc();
+        Iterable<Achievement> expiredAchievements = achievementRepository.findByExpirationBefore(now);
         List<Achievement> allActiveAchievementsList = new ArrayList<>();
-        for(Achievement achievement : allActiveAchievements) {
+        List<Achievement> allExpiredAchievementsList = new ArrayList<>();
+        for(Achievement achievement : allAchievements) {
             allActiveAchievementsList.add(achievement);
         }
+        for(Achievement achievement : expiredAchievements) {
+            allExpiredAchievementsList.add(achievement);
+        }
+        allActiveAchievementsList.removeAll(allExpiredAchievementsList);
         allActiveAchievementsList.removeAll(ownAchievements);
         return ResponseEntity.ok(allActiveAchievementsList);
     }
