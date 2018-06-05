@@ -13,7 +13,8 @@ import Users from './routes/Users';
 import Registration from './routes/Registration';
 import NotFound from './routes/NotFound';
 //import AchievementsLine from './routes/Achievements/AchievementsLine';
-import NewAchievement from './routes/CreateAchievement/CreateAchievementForm';
+import NewAchievement from './routes/Achievements/CreateAchievement/CreateAchievementForm';
+import AchievementDetails from './routes/AchievementDetails';
 
 const Router = () => (
   <BrowserRouter>
@@ -31,7 +32,7 @@ const Router = () => (
         <Route component={NotFound} />
       </Switch>
       <ModalFooter>
-        <p> yoloright 2018 BSBL-hadada</p>
+        <p> PubApp 2018.</p>
       </ModalFooter>
     </div>
   </BrowserRouter>

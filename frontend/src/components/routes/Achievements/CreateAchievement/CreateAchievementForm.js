@@ -1,7 +1,9 @@
 import React from 'react';
-import FormFields from '../widgets/forms/FormFields';
+import FormFields from './../../widgets/forms/FormFields';
 import axios from 'axios';
 import './new.css';
+import MyHeader from './../../../header/header';
+
 
 
 class CreateAchievementForm extends React.Component {
@@ -107,7 +109,7 @@ class CreateAchievementForm extends React.Component {
         console.log(response.status);
 
         if (status === +200) {
-          window.location.replace('/achievement');
+          window.location.replace('/achievements');
         }
       })
       .catch(function (error) {
@@ -115,35 +117,25 @@ class CreateAchievementForm extends React.Component {
         console.log(error);
         console.log(error.name);
         console.log(error.value);
-
         console.log(error.status);
-
-
         console.log(error.type);
-
-
-
-
       });
-
   }
 
 
   render() {
     return (
       <div>
+        <MyHeader />
         <form onSubmit={this.submitForm}>
           <FormFields
             formData={this.state.formData}
             change={(newState) => this.updateForm(newState)}
           />
-
-          <button type="submit">Submit</button>
+          <button type="submit">Add achievement</button>
         </form>
       </div>
     )
   }
 }
-
-
 export default CreateAchievementForm;

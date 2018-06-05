@@ -36,7 +36,7 @@ public class AchievementConditionController {
 
     //get achievement conditions
     @GetMapping(path = "/{id}/achievement_conditions")
-    public @ResponseBody ResponseEntity findAchievementConditions(@PathVariable("id") Long id, @RequestHeader String token) {
+    public @ResponseBody ResponseEntity findAchievementConditions(@PathVariable("id") Long id /*@RequestHeader String token*/) {
         //if(validations.isAdmin(token)) {
             Iterable<AchievementCondition> allAchievementConditions = achievementConditionRepository.findAll();
             List<AchievementCondition> achievementConditionList = new ArrayList();
@@ -65,7 +65,7 @@ public class AchievementConditionController {
 
     //create new achievement condition
     @PostMapping(path="/{id}/achievement_conditions")
-    public @ResponseBody ResponseEntity addNewAchievementCondition (@PathVariable("id") Long id, @RequestBody String condition, @RequestHeader String token) {
+    public @ResponseBody ResponseEntity addNewAchievementCondition (@PathVariable("id") Long id, @RequestBody String condition /*@RequestHeader String token*/) {
         //if(validations.isAdmin(token)) {
             AchievementCondition newAchievementCondition = new AchievementCondition();
             JSONObject jsonObject = new JSONObject(condition);
