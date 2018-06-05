@@ -40,7 +40,7 @@ public class QRCGenerator {
         String rndchars = RandomStringUtils.randomAlphanumeric(4);
         String uniquefilename = new SimpleDateFormat("'QR_'yyyyMMdd-HHmm'_'").format(new Date());
         Path path = FileSystems.getDefault().getPath("myQRcodes/", uniquefilename + rndchars + ".png");
-        BitMatrix bitMatrix = qrCodeWriter.encode(path.toString(), BarcodeFormat.QR_CODE, size, size, hints);
+        BitMatrix bitMatrix = qrCodeWriter.encode(path.toString().split("/")[1], BarcodeFormat.QR_CODE, size, size, hints);
         MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
         Ordering generated = orderingRepository.findById(id).get();
         generated.setQrCodePath(path.toString().split("/")[1]);
