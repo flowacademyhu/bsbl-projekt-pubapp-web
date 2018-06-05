@@ -66,7 +66,7 @@ public class OrderLineController {
 
     //create new orderLine
     @PostMapping(path="/{id}/orderlines")
-    public @ResponseBody ResponseEntity addNewOrderLine (@PathVariable("id") Long orderId, @RequestBody String orderLine, @RequestHeader String token) {
+    public @ResponseBody ResponseEntity addNewOrderLine (@PathVariable("id") Long orderId, @RequestBody String orderLine/*, @RequestHeader String token*/) {
         //*if(validations.isAdmin(token)) {
             OrderLine newOrderLine = new OrderLine();
             JSONObject jsonObject = new JSONObject(orderLine);

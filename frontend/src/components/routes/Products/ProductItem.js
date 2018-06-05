@@ -1,6 +1,8 @@
 import React from 'react';
 import FormFields from '../widgets/forms/FormFields';
 import axios from 'axios';
+import MyHeader from './../../header/header';
+
 export default class ProductItem extends React.Component {
     constructor(props) {
         super(props);
@@ -101,7 +103,7 @@ export default class ProductItem extends React.Component {
                 console.log(response.status);
 
                 if (status === +200) {
-                    window.location.replace('/product');
+                    window.location.replace('/products');
                 }
             })
     }
@@ -109,6 +111,7 @@ export default class ProductItem extends React.Component {
     render() {
         return (
             <div> <form onSubmit={this.submitForm}>
+                <MyHeader />
                 <FormFields
                     formData={this.state.formData}
                     change={(newState) => this.updateForm(newState)}

@@ -41,12 +41,16 @@ export default class Products extends React.Component {
       });
   }
 
+  goto () {
+    window.location.replace('/newAchievement');
+  }
+
   render () {
     console.log(this.state);
     return (
       <div>
         <MyHeader />
-        <h3>Achievements</h3>
+        <h3>Achievements<button onClick={this.goto.bind(this)} type='submit'>Add new achievement</button></h3>
         <ul>List of all the achievements: {this.renderAchievements()}</ul>
       </div>
     );

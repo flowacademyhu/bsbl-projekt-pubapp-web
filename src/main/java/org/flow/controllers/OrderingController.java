@@ -32,12 +32,12 @@ public class OrderingController {
 
     //get all orderings
     @GetMapping
-    public @ResponseBody ResponseEntity findAllOrders (@RequestHeader(value = "Authorization") String token) {
-        if(validations.isAdmin(token)) {
+    public @ResponseBody ResponseEntity findAllOrders (/*@RequestHeader(value = "Authorization") String token*/) {
+        //if(validations.isAdmin(token)) {
             return ResponseEntity.ok(orderingRepository.findAll());
-        } else {
+       /* } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
-        }
+        }*/
     }
 
     // get ordering by ID

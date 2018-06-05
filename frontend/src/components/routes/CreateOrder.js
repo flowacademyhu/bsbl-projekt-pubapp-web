@@ -1,8 +1,9 @@
 import React from 'react';
 import axios from 'axios';
 import MyHeader from './../header/header';
+//import NewOrder from './NewOrder';
 
-export default class Orders extends React.Component {
+export default class CreateOrders extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -19,7 +20,7 @@ export default class Orders extends React.Component {
     };
 
     axios
-      .get('http://127.0.0.1:8080/ordering', { headers: config })
+      .get('http://127.0.0.1:8080/products', { headers: config })
       .then(({ data }) => {
         console.log(data);
         this.setState(
@@ -42,7 +43,7 @@ export default class Orders extends React.Component {
   }
 
   goto () {
-    window.location.replace('/newOrder');
+    window.location.replace('/Orders');
   }
 
   render () {
@@ -50,27 +51,29 @@ export default class Orders extends React.Component {
     return (
       <div>
         <MyHeader />
-        <h3>Orders<button onClick={this.goto.bind(this)} type='submit'>New order</button></h3>
-        <ul>List of all the orders: {this.renderOrders()}</ul>
+        <table>
+          <thead>
+
+            <td>Select product: </td>
+            <td>Quantity</td>
+
+          </thead>
+          <tbody>{this.renderProducts()}</tbody>
+        </table>
+        <button type='submit'>Done</button>
       </div>
     );
   }
 
-  viewQrCode (filename) {
-    let link = '/myQRcodes/' + filename;
-    window.open(link, '_blank');
-  }
-
-  renderOrders () {
+  renderProducts () {
     console.log(this.state.items);
-    const renderOrders = this.state.items.map((order, i) => {
-      return (
-        <form >
-          <li key={order.id}>Created at: {order.created} <button onClick={this.viewQrCode.bind(this, order.qrCodePath)} type='submit'>view QR code</button>
-          </li>
-        </form>
-      );
+    const renderProducts = this.state.items.map(function (product, i) {
+      return <tr>
+        <td>{product.category} \ {product.name} ({product.price} Ft, {product.xpValue} xp)</td>
+        <td><input type='number' /></td>
+      </tr>;
     });
-    return renderOrders;
+
+    return renderProducts;
   }
 }

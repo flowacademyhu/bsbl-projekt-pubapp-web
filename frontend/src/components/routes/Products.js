@@ -2,16 +2,15 @@ import React from 'react';
 import axios from 'axios';
 import MyHeader from './../header/header';
 
-
 export default class Products extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       items: []
     };
   }
 
-  componentDidMount() {
+  componentDidMount () {
     var config = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -42,21 +41,25 @@ export default class Products extends React.Component {
       });
   }
 
+  goto () {
+    window.location.replace('/newProduct');
+  }
+
   render () {
     console.log(this.state);
     return (
       <div>
         <MyHeader />
-        <h3>Products</h3>
-        <ul>List of all the products: {this.renderUsers()}</ul>
+        <h3>Products<button onClick={this.goto.bind(this)} type='submit'>Add new product</button></h3>
+        <ul>List of all the products: {this.renderProducts()}</ul>
       </div>
     );
   }
 
-  renderUsers() {
+  renderProducts () {
     console.log(this.state.items);
     const renderProducts = this.state.items.map(function (product, i) {
-      return <li key={product.id}>Category: {product.category}, Name: {product.name}, Price: {product.price}, xpValue: {product.xpValue})
+      return <li key={product.id}>Category: {product.category}, Name: {product.name}, Price: {product.price}, xpValue: {product.xpValue}
       </li>;
     });
 
