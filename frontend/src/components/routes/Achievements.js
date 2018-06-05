@@ -1,6 +1,9 @@
 import React from 'react';
 import axios from 'axios';
 import MyHeader from './../header/header';
+import {NavLink} from 'react-router-dom';
+import AchievementDetails from './AchievementDetails';
+import CreateAchievementConditionForm from './Achievements/CreateAchievementCondition/CreateAchievementConditionForm';
 
 export default class Products extends React.Component {
   constructor(props) {
@@ -60,6 +63,8 @@ export default class Products extends React.Component {
     console.log(this.state.items);
     const renderAchievements = this.state.items.map(function (achievement, i) {
       return <li key={achievement.id}> Name: {achievement.name}, Description: {achievement.description}, xpValue: {achievement.xpValue}, expiration: {achievement.expiration}
+        <AchievementDetails id={achievement.id} />
+        <CreateAchievementConditionForm id={achievement.id} />
       </li>;
     });
 
