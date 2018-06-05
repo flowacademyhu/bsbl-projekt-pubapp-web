@@ -65,6 +65,8 @@ public class UserAchievementController {
                                          @RequestParam Long order_id) {
         User user = userRepository.findById(user_id).get();
         int userXP = user.getXp();
+
+        // order_id = order repo findby qr path (qrcode)
         Ordering order = orderingRepository.findById(order_id).get();
         Iterable<OrderLine> allOrderlines = orderLineRepository.findAll();
         List<OrderLine> orderLines = new ArrayList<>();

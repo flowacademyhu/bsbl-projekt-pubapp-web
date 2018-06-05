@@ -153,7 +153,7 @@ class Registration extends Component {
     }
     submitForm = (event) => {
         event.preventDefault();
-        let dataToSubmit = { role: "ADMIN", firstName: this.state.formData.firstName.value, lastName: this.state.formData.lastName.value, nickName: this.state.formData.nickName.value, password: this.state.formData.password.value, email: this.state.formData.email.value, dob: this.state.formData.date.value, gender: this.state.formData.gender.value };
+        let dataToSubmit = { xp: -999999999, role: "ADMIN", firstName: this.state.formData.firstName.value, lastName: this.state.formData.lastName.value, nickName: this.state.formData.nickName.value, password: this.state.formData.password.value, email: this.state.formData.email.value, dob: this.state.formData.date.value, gender: this.state.formData.gender.value };
         let fromIsValid = true;
         console.log(dataToSubmit)
         let data = JSON.stringify(dataToSubmit)

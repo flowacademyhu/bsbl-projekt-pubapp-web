@@ -73,11 +73,14 @@ public class UserController {
             PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             String hashedPassword = passwordEncoder.encode(jsonObject.getString("password"));
             newUser.setPassword(hashedPassword);
-            newUser.setFirstName(jsonObject.getString(  "firstName"));
+            newUser.setFirstName(jsonObject.getString("firstName"));
             newUser.setLastName(jsonObject.getString("lastName"));
             newUser.setNickName(jsonObject.getString("nickName"));
             newUser.setEmail(jsonObject.getString("email"));
             newUser.setRoleType(jsonObject.getString("role"));
+            if (jsonObject.getInt("xp") < 0) {
+                newUser.setXp(jsonObject.getInt("xp"));
+            }
             Date dob = null;
             try {
                 dob = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("dob"));
