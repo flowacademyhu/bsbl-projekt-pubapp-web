@@ -72,6 +72,26 @@ class Registration extends Component {
                         placeholder: 'Enter your password'
                     },
                     validation: {
+                        pass: true,
+                        required: true,
+                        minLen: 4
+                    },
+                    valid: false,
+                    touched: false,
+                    validationMessage: ''
+                },
+                passwordagain: {
+                    element: 'input',
+                    value: '',
+                    label: true,
+                    labelText: 'Confirm Password',
+                    config: {
+                        name: 'password_input',
+                        type: 'password',
+                        placeholder: 'Enter your password'
+                    },
+                    validation: {
+                        passagain:true,
                         required: true,
                         minLen: 4
                     },
@@ -90,6 +110,7 @@ class Registration extends Component {
                         placeholder: 'Enter your email'
                     },
                     validation: {
+                        email:true,
                         required: true,
                         minLen: 5
                     },
@@ -128,6 +149,7 @@ class Registration extends Component {
                         placeholder: 'YYYY-MM-DD'
                     },
                     validation: {
+                        date:true,
                         required: false,
                         minLen: 3
                     },
@@ -155,15 +177,12 @@ class Registration extends Component {
         event.preventDefault();
         let dataToSubmit = { xp: -999999999, role: "ADMIN", firstName: this.state.formData.firstName.value, lastName: this.state.formData.lastName.value, nickName: this.state.formData.nickName.value, password: this.state.formData.password.value, email: this.state.formData.email.value, dob: this.state.formData.date.value, gender: this.state.formData.gender.value };
         let fromIsValid = true;
-        console.log(dataToSubmit)
         let data = JSON.stringify(dataToSubmit)
+        console.log(data)
         for (let key in this.state.formData) {
             fromIsValid = this.state.formData[key].valid && fromIsValid;
         }
         if (fromIsValid) {
-            console.log(dataToSubmit)
-        }
-
         axios.post('http://localhost:8080/users', data, {
             headers: {
                 'Content-Type': 'application/json',
@@ -192,6 +211,7 @@ class Registration extends Component {
                 console.log(error.config);
                 console.log(error);
             });
+        }
     }
 
     render() {
