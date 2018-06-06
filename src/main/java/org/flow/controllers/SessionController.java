@@ -61,7 +61,7 @@ public class SessionController {
             session.setToken(token);
             session.setUser(loggedUser);
             Date date = new Date();
-            date.setTime(date.getTime() + 40000);
+            date.setTime(date.getTime() + 300000);
             session.setExpiration(date);
             sessionRepository.save(session);
             return new ResponseEntity<>(token, HttpStatus.OK);

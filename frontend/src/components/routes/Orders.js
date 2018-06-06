@@ -15,6 +15,7 @@ export default class Orders extends React.Component {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Access-Control-Allow-Origin': '*',
+      'Authorization': document.cookie,
       crossdomain: true
     };
 
