@@ -70,7 +70,7 @@ export default class CreateOrders extends React.Component {
     const renderProducts = this.state.items.map(function (product, i) {
       return <tr>
         <td>{product.category} \ {product.name} ({product.price} Ft, {product.xpValue} xp)</td>
-        <td><input type='number' /></td>
+        <td><input class={product.id} type='number' /></td>
       </tr>;
     });
 

@@ -15,7 +15,7 @@ import Registration from './routes/Registration';
 import NotFound from './routes/NotFound';
 //import AchievementsLine from './routes/Achievements/AchievementsLine';
 import NewAchievement from './routes/Achievements/CreateAchievement/CreateAchievementForm';
-import AchievementDetails from './routes/AchievementDetails';
+//import AchievementDetails from './routes/AchievementDetails';
 
 const Router = () => (
   <BrowserRouter>
