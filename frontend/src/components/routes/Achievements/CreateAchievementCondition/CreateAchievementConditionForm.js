@@ -6,6 +6,7 @@ class CreateAchievementConditionForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      products: this.props.products,
       formData: {
         quantity: {
           element: 'input',
@@ -24,14 +25,15 @@ class CreateAchievementConditionForm extends React.Component {
         },
 
         productName: {
-          element: 'input',
+          element: 'select',
           value: '',
           label: true,
           labelText: 'product',
           config: {
             name: 'name_input',
-            text: 'text',
-            placeholder: 'product'
+            options: [
+              { val: products[1].name, text: products[1].name }
+          ],
 
           },
           validation: {
@@ -82,6 +84,7 @@ class CreateAchievementConditionForm extends React.Component {
   }
 
   render() {
+    console.log(this.state.products[1].name);
     return (
       <div>
         <form onSubmit={this.submitForm}>

@@ -89,7 +89,7 @@ export default class Products extends React.Component {
     const renderAchievements = this.state.items.map(function (achievement, i) {
       return <li key={achievement.id}> Name: {achievement.name}, Description: {achievement.description}, xpValue: {achievement.xpValue}, expiration: {achievement.expiration}
         <AchievementDetails id={achievement.id} />
-        <CreateAchievementConditionForm id={achievement.id} />
+        <CreateAchievementConditionForm id={achievement.id} products={products} />
       </li>;
     });
 

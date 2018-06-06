@@ -40,116 +40,138 @@ public class AchievementController {
 
     //get all achievements
     @GetMapping
-    public @ResponseBody ResponseEntity getAllAchievements() {
-        return ResponseEntity.ok(achievementRepository.findAllByOrderByExpirationAsc());
+    public @ResponseBody ResponseEntity getAllAchievements(@RequestHeader(value = "Authorization") String token) {
+        if(validations.stayingALive(token)) {
+            return ResponseEntity.ok(achievementRepository.findAllByOrderByExpirationAsc());
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session validations.");
+        }
     }
 
     //get all active achievements
     @GetMapping(path = "/active")
     public @ResponseBody ResponseEntity getAllActiveAchievements(@RequestHeader(value = "Authorization") String token) {
-        long id = sessionRepository.findByToken(token).getUser().getId();
-        Iterable<UserAchievement> allUserAchievements = userAchievementRepository.findAll();
-        List<UserAchievement> userAchievements = new ArrayList<>();
-        List<Achievement> ownAchievements = new ArrayList<>();
-        for (UserAchievement userAchievement : allUserAchievements) {
-            if (userAchievement.getUser().getId().equals(userRepository.findById(id).get().getId())) {
-                userAchievements.add(userAchievement);
+        if(validations.stayingALive(token)) {
+            long id = sessionRepository.findByToken(token).getUser().getId();
+            Iterable<UserAchievement> allUserAchievements = userAchievementRepository.findAll();
+            List<UserAchievement> userAchievements = new ArrayList<>();
+            List<Achievement> ownAchievements = new ArrayList<>();
+            for (UserAchievement userAchievement : allUserAchievements) {
+                if (userAchievement.getUser().getId().equals(userRepository.findById(id).get().getId())) {
+                    userAchievements.add(userAchievement);
+                }
             }
-        }
-        for (UserAchievement userAchievement : userAchievements) {
-            Optional<Achievement> achievement = achievementRepository.findById(userAchievement.getAchievement().getId());
-            ownAchievements.add(achievement.get());
+            for (UserAchievement userAchievement : userAchievements) {
+                Optional<Achievement> achievement = achievementRepository.findById(userAchievement.getAchievement().getId());
+                ownAchievements.add(achievement.get());
 
+            }
+            Date now = new Date();
+            Iterable<Achievement> allAchievements = achievementRepository.findAllByOrderByExpirationAsc();
+            Iterable<Achievement> expiredAchievements = achievementRepository.findByExpirationBefore(now);
+            List<Achievement> allActiveAchievementsList = new ArrayList<>();
+            List<Achievement> allExpiredAchievementsList = new ArrayList<>();
+            for (Achievement achievement : allAchievements) {
+                allActiveAchievementsList.add(achievement);
+            }
+            for (Achievement achievement : expiredAchievements) {
+                allExpiredAchievementsList.add(achievement);
+            }
+            allActiveAchievementsList.removeAll(allExpiredAchievementsList);
+            allActiveAchievementsList.removeAll(ownAchievements);
+            return ResponseEntity.ok(allActiveAchievementsList);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session validations.");
         }
-        Date now = new Date();
-        Iterable<Achievement> allAchievements = achievementRepository.findAllByOrderByExpirationAsc();
-        Iterable<Achievement> expiredAchievements = achievementRepository.findByExpirationBefore(now);
-        List<Achievement> allActiveAchievementsList = new ArrayList<>();
-        List<Achievement> allExpiredAchievementsList = new ArrayList<>();
-        for(Achievement achievement : allAchievements) {
-            allActiveAchievementsList.add(achievement);
-        }
-        for(Achievement achievement : expiredAchievements) {
-            allExpiredAchievementsList.add(achievement);
-        }
-        allActiveAchievementsList.removeAll(allExpiredAchievementsList);
-        allActiveAchievementsList.removeAll(ownAchievements);
-        return ResponseEntity.ok(allActiveAchievementsList);
     }
 
     //get achievement by ID
     @GetMapping(path = "/{id}")
-    public @ResponseBody ResponseEntity getAchievementById (@PathVariable("id") Long id, @RequestHeader String token)  throws AchievementNotFoundException {
-        if(validations.isAdmin(token)) {
-            Optional<Achievement> achievement = achievementRepository.findById(id);
-            if (!achievement.isPresent()) {
-                //throw new AchievementNotFoundException("Achievement not found.");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    public @ResponseBody ResponseEntity getAchievementById (@PathVariable("id") Long id, @RequestHeader(value = "Authorization") String token)  throws AchievementNotFoundException {
+        if(validations.stayingALive(token)) {
+            if (validations.isAdmin(token)) {
+                Optional<Achievement> achievement = achievementRepository.findById(id);
+                if (!achievement.isPresent()) {
+                    //throw new AchievementNotFoundException("Achievement not found.");
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 
+                }
+                return ResponseEntity.ok(achievement);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
             }
-            return ResponseEntity.ok(achievement);
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session validations.");
         }
     }
 
     //create new achievement
     @PostMapping
-    public @ResponseBody ResponseEntity addNewAchievement (@RequestBody String achievement
-    ){
-    //, @RequestHeader String token) {
-        //if(validations.isAdmin(token)) {
-            JSONObject jsonObject = new JSONObject(achievement);
-            Achievement newAchievement = new Achievement();
-            newAchievement.setName(jsonObject.getString("name"));
-            newAchievement.setDescription(jsonObject.getString("description"));
-            newAchievement.setXpValue(jsonObject.getInt("xpValue"));
-            Date expiration = null;
-            try {
-                expiration = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("expiration"));
-            } catch (ParseException e) {
-                e.printStackTrace();
+    public @ResponseBody ResponseEntity addNewAchievement (@RequestBody String achievement, @RequestHeader(value = "Authorization") String token) {
+        if(validations.stayingALive(token)) {
+            if (validations.isAdmin(token)) {
+                JSONObject jsonObject = new JSONObject(achievement);
+                Achievement newAchievement = new Achievement();
+                newAchievement.setName(jsonObject.getString("name"));
+                newAchievement.setDescription(jsonObject.getString("description"));
+                newAchievement.setXpValue(jsonObject.getInt("xpValue"));
+                Date expiration = null;
+                try {
+                    expiration = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("expiration"));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                newAchievement.setExpiration(expiration);
+                achievementRepository.save(newAchievement);
+                return ResponseEntity.ok(newAchievement);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
             }
-            newAchievement.setExpiration(expiration);
-            achievementRepository.save(newAchievement);
-            return ResponseEntity.ok(newAchievement);
-
-        /*} else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
-        }*/
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session validations.");
+        }
     }
 
     //update achievement
     @PutMapping(path="/{id}")
-    public @ResponseBody ResponseEntity updateAchievement(@PathVariable("id") Long id, @RequestBody String achievement, @RequestHeader String token) {
-        //if(validations.isAdmin(token)) {
-            Achievement updatedAchievement = achievementRepository.findById(id).get();
-            JSONObject jsonObject = new JSONObject(achievement);
-            updatedAchievement.setName(jsonObject.getString("name"));
-            updatedAchievement.setDescription(jsonObject.getString("description"));
-            updatedAchievement.setXpValue(jsonObject.getInt("xpValue"));
-            Date expiration = null;
-            try {
-                expiration = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("expiration"));
-            } catch (ParseException e) {
-                e.printStackTrace();
+    public @ResponseBody ResponseEntity updateAchievement(@PathVariable("id") Long id, @RequestBody String achievement, @RequestHeader(value = "Authorization") String token) {
+        if(validations.stayingALive(token)) {
+            if (validations.isAdmin(token)) {
+                Achievement updatedAchievement = achievementRepository.findById(id).get();
+                JSONObject jsonObject = new JSONObject(achievement);
+                updatedAchievement.setName(jsonObject.getString("name"));
+                updatedAchievement.setDescription(jsonObject.getString("description"));
+                updatedAchievement.setXpValue(jsonObject.getInt("xpValue"));
+                Date expiration = null;
+                try {
+                    expiration = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("expiration"));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                updatedAchievement.setExpiration(expiration);
+                achievementRepository.save(updatedAchievement);
+                return ResponseEntity.ok(updatedAchievement);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
             }
-            updatedAchievement.setExpiration(expiration);
-            achievementRepository.save(updatedAchievement);
-            return ResponseEntity.ok(updatedAchievement);
-        /*} else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
-        }*/
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session validations.");
+        }
     }
 
     //delete achievement by ID
     @DeleteMapping(path = "/{id}")
-    public @ResponseBody ResponseEntity deleteAchievement(@PathVariable("id") Long id, @RequestHeader String token) {
-        if(validations.isAdmin(token)) {
-            achievementRepository.deleteById(id);
-            return ResponseEntity.ok(achievementRepository.findAll());
+    public @ResponseBody ResponseEntity deleteAchievement(@PathVariable("id") Long id, @RequestHeader(value = "Authorization") String token) {
+        if (validations.stayingALive(token)) {
+            if (validations.isAdmin(token)) {
+                achievementRepository.deleteById(id);
+                return ResponseEntity.ok(achievementRepository.findAll());
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
+            }
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session validations.");
         }
     }
+
 }

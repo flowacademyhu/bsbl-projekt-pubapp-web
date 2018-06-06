@@ -2,6 +2,7 @@ package org.flow.configuration;
 
 import org.flow.models.Session;
 import org.flow.repositories.SessionRepository;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

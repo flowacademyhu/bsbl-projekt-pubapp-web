@@ -32,12 +32,16 @@ public class OrderingController {
 
     //get all orderings
     @GetMapping
-    public @ResponseBody ResponseEntity findAllOrders (/*@RequestHeader(value = "Authorization") String token*/) {
-        //if(validations.isAdmin(token)) {
-            return ResponseEntity.ok(orderingRepository.findAll());
-       /* } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
-        }*/
+    public @ResponseBody ResponseEntity findAllOrders (@RequestHeader(value = "Authorization") String token) {
+        if(validations.stayingALive(token)) {
+            if (validations.isAdmin(token)) {
+                return ResponseEntity.ok(orderingRepository.findAll());
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session validations.");
+        }
     }
 
     // get ordering by ID
