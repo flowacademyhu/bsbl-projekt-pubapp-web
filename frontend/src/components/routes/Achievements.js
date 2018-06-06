@@ -9,7 +9,8 @@ export default class Products extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: []
+      items: [],
+      products: []
     };
   }
 
@@ -27,6 +28,28 @@ export default class Products extends React.Component {
         console.log(data);
         this.setState(
           { items: data }
+        );
+      })
+      .catch(function (error) {
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log('Error', error.message);
+        }
+        console.log(error.config);
+        console.log(error);
+      });
+
+    axios
+      .get('http://127.0.0.1:8080/products', { headers: config })
+      .then(({ data }) => {
+        console.log(data);
+        this.setState(
+          { products: data }
         );
       })
       .catch(function (error) {
@@ -61,6 +84,8 @@ export default class Products extends React.Component {
 
   renderAchievements () {
     console.log(this.state.items);
+    var products = this.state.products;
+    console.log(products);
     const renderAchievements = this.state.items.map(function (achievement, i) {
       return <li key={achievement.id}> Name: {achievement.name}, Description: {achievement.description}, xpValue: {achievement.xpValue}, expiration: {achievement.expiration}
         <AchievementDetails id={achievement.id} />
