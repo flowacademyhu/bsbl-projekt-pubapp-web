@@ -66,7 +66,7 @@ class Login extends Component {
     }
       if (fromIsValid) {
         axios.defaults.headers.post['Content-Type'] = 'application/json';
-        axios.post('http://192.168.5.111:8080/sessions/admin', data, {
+        axios.post('http://127.0.01:8080/sessions/admin', data, {
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',

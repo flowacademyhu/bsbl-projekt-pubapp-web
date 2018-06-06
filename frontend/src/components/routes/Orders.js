@@ -47,11 +47,15 @@ export default class Orders extends React.Component {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Origin': '*',
+          'Authorization': document.cookie
+
         }
       })
       .then(function (response) {
         const status = JSON.parse(response.status);
+        const orderID = JSON.parse(status.data.id);
+        
         window.location.replace(`/orders/${status.data.id}/newOrder`);
       });
   }

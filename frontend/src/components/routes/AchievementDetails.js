@@ -17,7 +17,8 @@ export default class AchievementDetails extends React.Component {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Access-Control-Allow-Origin': '*',
-      crossdomain: true
+      crossdomain: true,
+      'Authorization': document.cookie
     };
     console.log(this.props.id);
     console.log(this.state.id);

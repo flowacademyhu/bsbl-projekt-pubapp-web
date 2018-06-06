@@ -68,8 +68,8 @@ public class UserController {
 
     //create new user
     @PostMapping
-    public @ResponseBody ResponseEntity addNewUser (@RequestBody String user, @RequestHeader(value = "Authorization") String token) {
-        if(validations.stayingALive(token)) {
+    public @ResponseBody ResponseEntity addNewUser (@RequestBody String user) {
+
             User newUser = new User();
             JSONObject jsonObject = new JSONObject(user);
             if (userRepository.findByEmail(jsonObject.getString("email")) != null) {
@@ -96,9 +96,6 @@ public class UserController {
                 newUser.setGender(jsonObject.getBoolean("gender"));
                 userRepository.save(newUser);
                 return ResponseEntity.ok(newUser);
-            }
-        } else  {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session validations.");
         }
     }
 

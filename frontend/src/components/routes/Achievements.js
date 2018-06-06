@@ -18,7 +18,8 @@ export default class Products extends React.Component {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Access-Control-Allow-Origin': '*',
-      crossdomain: true
+      crossdomain: true,
+      'Authorization': document.cookie
     };
 
     axios

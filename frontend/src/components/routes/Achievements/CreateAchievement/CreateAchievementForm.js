@@ -101,7 +101,8 @@ class CreateAchievementForm extends React.Component {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Access-Control-Allow-Origin': '*'
+        'Access-Control-Allow-Origin': '*',
+        'Authorization': document.cookie
       }
     })
       .then(function (response) {
