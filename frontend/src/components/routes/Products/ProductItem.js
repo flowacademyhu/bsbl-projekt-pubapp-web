@@ -89,13 +89,15 @@ export default class ProductItem extends React.Component {
         event.preventDefault();
         let datatosubmit = { name: this.state.formData.name.value, price: this.state.formData.price.value, xpValue: this.state.formData.xpValue.value, category: this.state.formData.category.value }
         let data = JSON.stringify(datatosubmit);
-        console.log(data)
+        console.log(data);
+        console.log(document.cookie);
         axios.defaults.headers.post['Content-Type'] = 'application/json';
         axios.post('http://127.0.0.1:8080/products', data, {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'Access-Control-Allow-Origin': '*'
+                'Access-Control-Allow-Origin': '*',
+                'Authorization': document.cookie
             }
         })
             .then(function (response) {
@@ -106,6 +108,20 @@ export default class ProductItem extends React.Component {
                     window.location.replace('/products');
                 }
             })
+
+            .catch(function (error) {
+                if (error.response) {
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                } else if (error.request) {
+                    console.log(error.request);
+                } else {
+                    console.log('Error', error.message);
+                }
+                console.log(error.config);
+                console.log(error);
+            });
     }
 
     render() {

@@ -77,7 +77,10 @@ class Login extends Component {
         console.log(response.status);
 
         if (status === +200) {
+          document.cookie = response.data;
+          console.log(document.cookie);
           window.location.replace('/home');
+
         }
         
         

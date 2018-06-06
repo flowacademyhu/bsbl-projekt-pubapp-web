@@ -7,7 +7,12 @@ export default class CreateOrders extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      items: []
+      items: [],
+      orderline: {
+        productName: '',
+        quantity: ''
+      },
+      orders: {}
     };
   }
 
@@ -65,13 +70,20 @@ export default class CreateOrders extends React.Component {
     );
   }
 
+/*
+  updateState (newState, product) {
+    this.state.orderline.productName = product.name,
+      this.state.orderline.quantity = newState,
+      this.state.orders.push(this.state.orderline);
+  };
+*/
+
   renderProducts () {
-    console.log(this.state.items);
     const renderProducts = this.state.items.map(function (product, i) {
-      return <tr>
-        <td>{product.category} \ {product.name} ({product.price} Ft, {product.xpValue} xp)</td>
-        <td><input class={product.id} type='number' /></td>
-      </tr>;
+      return <tr key={i}>
+        <td> {product.category} \ {product.name} ({product.price} Ft, {product.xpValue} xp)</td>
+        <td> <input onChange={(e) => this.setState.order({ [product.name]: e.target.value })} type='number' /></td>
+      </tr >;
     });
 
     return renderProducts;
