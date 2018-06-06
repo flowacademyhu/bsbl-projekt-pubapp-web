@@ -35,11 +35,40 @@ const FormFields = (props) => {
     props.change(newState);
   };
   const validate = (element) => {
-    console.log(element);
+    
+    const emailregex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const passregex = /((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]))/;
+    const dateregex = /^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/;
     let error = [true, ''];
+    
+    if (element.validation.passagain){
+      var valid = false;
+      const valid2 = props.formData.passwordagain.value;
+      const valid1 = props.formData.password.value;
+      if (valid2 === valid1){
+        valid = true;
+      }
+      const message = `${!valid ? 'must be the same as the password': ''}`;
+      error = !valid ? [valid, message] : error;
+    }
+    if (element.validation.date){
+      const valid = dateregex.test(String(element.value));
+      const message = `${!valid ? 'must be YYYY-MM-DD': ''}`;
+      error = !valid ? [valid, message] : error;
+    }
+    if (element.validation.pass){
+      const valid = passregex.test(String(element.value));
+      const message = `${!valid ? 'must be at least 2 lower, upper, spacial, and number char ': ''}`;
+      error = !valid ? [valid, message] : error;
+    }
+    if (element.validation.email){
+      const valid = emailregex.test(String(element.value).toLocaleLowerCase());
+      const message = `${!valid ? 'must be a valid email': ''}`;
+      error = !valid ? [valid, message] : error;
+     }
     if (element.validation.minLen) {
       const valid = element.value.length >= element.validation.minLen;
-      const message = `${!valid ? 'Must be gretaer than' + element.validation.minLen : ''}`;
+      const message = `${!valid ? 'Must be gretaer than ' + element.validation.minLen : ''}`;
       error = !valid ? [valid, message] : error;
     }
     if (element.validation.required) {

@@ -20,11 +20,11 @@ class Login extends Component {
             placeholder: 'Enter your email'
           },
           validation: {
+            email: true,
             required: true,
             minLen: 5
           },
           valid: false,
-          touched: false,
           validationMessage: ''
         },
         password: {
@@ -38,11 +38,11 @@ class Login extends Component {
             placeholder: 'Enter your password'
           },
           validation: {
+            pass: true,
             required: true,
             minLen: 5
           },
           valid: false,
-          touched: false,
           validationMessage: ''
         }
       }
@@ -59,40 +59,45 @@ class Login extends Component {
     let dataToSubmit = { email: this.state.formData.email.value, password: this.state.formData.password.value };
     console.log(dataToSubmit);
     let data = JSON.stringify(dataToSubmit);
+    let fromIsValid = true;
 
-    axios.defaults.headers.post['Content-Type'] = 'application/json';
+    for (let key in this.state.formData) {
+      fromIsValid = this.state.formData[key].valid && fromIsValid;
+    }
+      if (fromIsValid) {
+        axios.defaults.headers.post['Content-Type'] = 'application/json';
+        axios.post('http://192.168.5.111:8080/sessions/admin', data, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+          }
+        })
 
-
-    axios.post('http://127.0.0.1:8080/sessions/admin', data, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      }
-    })
-
-      .then(function (response) {
-        console.log(response);
-        const status = JSON.parse(response.status);
-        console.log(response.status);
+        .then(function (response) {
+          console.log(response);
+          const status = JSON.parse(response.status);
+          console.log(response.status);
 
         if (status === +200) {
+          document.cookie = response.data;
+          console.log(document.cookie);
           window.location.replace('/home');
+
         }
         
         
       })
 
-      .catch (function (error) {
+        .catch (function (error) {
         if (error.response.status === 406) {
             window.location.replace('http://heeeeeeeey.com/');
         }
         return Promise.reject(error.response);
     });
-
+  }
   }
   render() {
-
     return (
       <div className='container'>
         <form onSubmit={this.submitForm}>
@@ -105,7 +110,6 @@ class Login extends Component {
         <Jumbotron>
           <h1>Welcome </h1>
           <h2> Orgiginal PubAPP </h2>
-
           <ul>
             <li> gooogle play  link <a href='asdasdasd'> click me </a>  </li>
             <li> app store link <a href='asdasdasd'>click me </a> </li>
