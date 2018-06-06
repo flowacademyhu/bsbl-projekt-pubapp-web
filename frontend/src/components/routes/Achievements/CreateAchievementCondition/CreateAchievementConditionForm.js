@@ -55,7 +55,6 @@ class CreateAchievementConditionForm extends React.Component {
     await axios
       .get('http://127.0.0.1:8080/products', { headers: config })
       .then(({ data }) => {
-        console.log('kurva');
         console.log(data);
         this.setState(
           { productList: data }
@@ -74,7 +73,6 @@ class CreateAchievementConditionForm extends React.Component {
         console.log(error.config);
         console.log(error);
       });
-    console.log('picsa');
     console.log(this.props.products);
     var list = [];
     var element = {val: '', text: ''};
