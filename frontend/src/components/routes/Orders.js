@@ -42,7 +42,18 @@ export default class Orders extends React.Component {
   }
 
   goto () {
-    window.location.replace('/newOrder');
+    axios
+      .post('http://127.0.0.1:8080/ordering', {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        }
+      })
+      .then(function (response) {
+        const status = JSON.parse(response.status);
+        window.location.replace(`/orders/${status.data.id}/newOrder`);
+      });
   }
 
   render () {
