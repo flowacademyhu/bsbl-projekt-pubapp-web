@@ -21,7 +21,7 @@ export default class ProductItem extends React.Component {
                     validation: {
                         required: false
                     },
-                    valid: true
+                    valid: true,
                 },
                 price: {
                     element: 'input',

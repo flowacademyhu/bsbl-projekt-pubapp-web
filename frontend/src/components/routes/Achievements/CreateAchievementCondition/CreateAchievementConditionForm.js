@@ -32,7 +32,7 @@ class CreateAchievementConditionForm extends React.Component {
           config: {
             name: 'name_input',
             options: [
-              { val: products[1].name, text: products[1].name }
+//              { val: products[1].name, text: products[1].name }
           ],
 
           },

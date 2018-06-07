@@ -4,19 +4,15 @@ import MyHeader from './../header/header';
 //import NewOrder from './NewOrder';
 
 export default class CreateOrders extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
       items: [],
-      orderline: {
-        productName: '',
-        quantity: ''
-      },
-      orders: {}
+      order: []
     };
   }
 
-  componentDidMount () {
+  componentDidMount() {
     var config = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -47,11 +43,11 @@ export default class CreateOrders extends React.Component {
       });
   }
 
-  goto () {
+  goto() {
     window.location.replace('/Orders');
   }
 
-  render () {
+  render() {
     console.log(this.state);
     return (
       <div>
@@ -70,22 +66,24 @@ export default class CreateOrders extends React.Component {
     );
   }
 
-/*
-  updateState (newState, product) {
-    this.state.orderline.productName = product.name,
-      this.state.orderline.quantity = newState,
-      this.state.orders.push(this.state.orderline);
-  };
-*/
+  /*
+    addOrderLine (newState, product) {
+      this.state.orderline.productName = product.name,
+        this.state.orderline.quantity = newState,
+        this.state.orders.push(this.state.orderline);
+    };
+  */
 
-  renderProducts () {
+  renderProducts() {
     const renderProducts = this.state.items.map(function (product, i) {
       return <tr key={i}>
         <td> {product.category} \ {product.name} ({product.price} Ft, {product.xpValue} xp)</td>
-        <td> <input onChange={(e) => this.setState.order({ [product.name]: e.target.value })} type='number' /></td>
+        <td> <input type='number' /></td>
       </tr >;
     });
 
     return renderProducts;
   }
 }
+
+//{(e) => this.setState.order({ [product.name]: e.target.value })}
