@@ -12,11 +12,12 @@ export default class AchievementDetails extends React.Component {
     };
   }
 
-  componentDidMount() {
+  componentWillMount() {
     var config = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Access-Control-Allow-Origin': '*',
+      'Authorization': document.cookie,
       crossdomain: true
     };
     console.log(this.props.id);

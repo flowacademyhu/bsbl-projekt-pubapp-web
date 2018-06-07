@@ -47,49 +47,67 @@ public class OrderingController {
     // get ordering by ID
     @GetMapping(path="/{id}")
     public @ResponseBody ResponseEntity getProductById (@PathVariable("id") Long id, @RequestHeader(value = "Authorization") String token) {
-        if(validations.isAdmin(token)) {
-            Optional<Ordering> ordering = orderingRepository.findById(id);
-            return ResponseEntity.ok(ordering);
+        if(validations.stayingALive(token)) {
+            if (validations.isAdmin(token)) {
+                Optional<Ordering> ordering = orderingRepository.findById(id);
+                return ResponseEntity.ok(ordering);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
+            }
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session validations.");
         }
-
     }
 
     //create new ordering
     @PostMapping
     public @ResponseBody ResponseEntity addNewOrdering (@RequestHeader(value = "Authorization") String token) {
-        //if(validations.isAdmin(token)) {
-            Ordering newOrdering = new Ordering();
-            newOrdering.setQrCodePath("qrCodePath");
-            orderingRepository.save(newOrdering);
-            return ResponseEntity.ok(newOrdering);
-        /*} else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
-        }*/
+        if(validations.stayingALive(token)) {
+            if (validations.isAdmin(token)) {
+                Ordering newOrdering = new Ordering();
+                newOrdering.setQrCodePath("qrCodePath");
+                orderingRepository.save(newOrdering);
+                return ResponseEntity.ok(newOrdering);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session validations.");
+        }
     }
 
     @GetMapping(path="/{id}/generate")
-    public @ResponseBody ResponseEntity generateCode (@PathVariable("id") Long id) {
-        try {
-            qrcGenerator.generateQRCode(id);
-        } catch (WriterException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public @ResponseBody ResponseEntity generateCode (@PathVariable("id") Long id, @RequestHeader(value = "Authorization") String token) {
+        if(validations.stayingALive(token)) {
+            if (validations.isAdmin(token)) {
+                try {
+                    qrcGenerator.generateQRCode(id);
+                } catch (WriterException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return ResponseEntity.ok(id + ". order's qr code saved");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session validations.");
         }
-        return ResponseEntity.ok(id + ". order's qr code saved");
     }
 
     //delete ordering by ID
     @DeleteMapping(path = "/{id}")
     public @ResponseBody ResponseEntity deleteOrdering (@PathVariable("id") Long id, @RequestHeader String token) {
-        if(validations.isAdmin(token)) {
-            orderingRepository.deleteById(id);
-            return ResponseEntity.ok(orderingRepository.findAll());
+        if(validations.stayingALive(token)) {
+            if (validations.isAdmin(token)) {
+                orderingRepository.deleteById(id);
+                return ResponseEntity.ok(orderingRepository.findAll());
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
+            }
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session validations.");
         }
-
     }
 }

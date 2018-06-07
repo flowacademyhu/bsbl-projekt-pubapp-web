@@ -6,7 +6,6 @@ class CreateAchievementConditionForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      products: this.props.products,
       formData: {
         quantity: {
           element: 'input',
@@ -31,9 +30,7 @@ class CreateAchievementConditionForm extends React.Component {
           labelText: 'product',
           config: {
             name: 'name_input',
-            options: [
-//              { val: products[1].name, text: products[1].name }
-          ],
+            options: [],
 
           },
           validation: {
@@ -42,8 +39,83 @@ class CreateAchievementConditionForm extends React.Component {
           valid: true,
         }
       },
-      id: this.props.id
+      id: this.props.id,
+      productList: []
     };
+  }
+
+   async componentWillMount() {
+    var config = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Authorization': document.cookie,
+      crossdomain: true
+    };
+    await axios
+      .get('http://127.0.0.1:8080/products', { headers: config })
+      .then(({ data }) => {
+        console.log(data);
+        this.setState(
+          { productList: data }
+        );
+      })
+      .catch(function (error) {
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log('Error', error.message);
+        }
+        console.log(error.config);
+        console.log(error);
+      });
+    console.log(this.props.products);
+    var list = [];
+    var element = {val: '', text: ''};
+    this.state.productList.forEach(product => {
+      element = {val: '', text: ''};
+      element.val = product.name;
+      element.text = product.name;
+      list.push(element);
+    });
+    console.log('shiiiiit');
+    console.log(list);
+    this.setState({formData : {
+      quantity: {
+        element: 'input',
+        value: '',
+        label: true,
+        labelText: 'quantity',
+        config: {
+          name: 'name_input',
+          text: 'text',
+          placeholder: 'enter quantity'
+        },
+        validation: {
+          required: false,
+        },
+        valid: true,
+      },
+
+      productName: {
+        element: 'select',
+        value: '',
+        label: true,
+        labelText: 'product',
+        config: {
+          name: 'name_input',
+          options: list
+        },
+        validation: {
+          required: false,
+        },
+        valid: true,
+      }
+    }});
   }
 
   updateForm(newState) {
@@ -62,7 +134,8 @@ class CreateAchievementConditionForm extends React.Component {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Access-Control-Allow-Origin': '*'
+        'Access-Control-Allow-Origin': '*',
+        'Authorization': document.cookie
       }
     })
       .then(function (response) {
@@ -84,7 +157,6 @@ class CreateAchievementConditionForm extends React.Component {
   }
 
   render() {
-    console.log(this.state.products[1].name);
     return (
       <div>
         <form onSubmit={this.submitForm}>

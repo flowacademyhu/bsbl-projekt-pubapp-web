@@ -38,8 +38,9 @@ public class UserController {
 
     //get all users
     @GetMapping
-    public @ResponseBody ResponseEntity getAllUsers (@RequestHeader(value = "Authorization") String token) {
-        if(validations.stayingALive(token)) {
+    public @ResponseBody
+    ResponseEntity getAllUsers(@RequestHeader(value = "Authorization") String token) {
+        if (validations.stayingALive(token)) {
             return ResponseEntity.ok(userRepository.findAllByOrderByLastNameAsc());
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session validations.");
@@ -48,8 +49,9 @@ public class UserController {
 
     //get user by ID
     @GetMapping(path = "/{id}")
-    public @ResponseBody ResponseEntity getUserById (@PathVariable("id") Long id, @RequestHeader(value = "Authorization") String token)  throws UserNotFoundException {
-        if(validations.stayingALive(token)) {
+    public @ResponseBody
+    ResponseEntity getUserById(@PathVariable("id") Long id, @RequestHeader(value = "Authorization") String token) throws UserNotFoundException {
+        if (validations.stayingALive(token)) {
             if (validations.checkUser(id, token)) {
                 Optional<User> user = userRepository.findById(id);
                 if (!user.isPresent()) {
@@ -60,7 +62,7 @@ public class UserController {
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
             }
-        } else  {
+        } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session validations.");
         }
     }
@@ -95,9 +97,9 @@ public class UserController {
                 newUser.setGender(jsonObject.getBoolean("gender"));
                 userRepository.save(newUser);
                 return ResponseEntity.ok(newUser);
+
             }
         } 
-    
 
     //update user
     @PutMapping(path="/{id}")
