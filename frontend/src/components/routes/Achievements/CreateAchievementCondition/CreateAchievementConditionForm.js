@@ -82,7 +82,6 @@ class CreateAchievementConditionForm extends React.Component {
       element.text = product.name;
       list.push(element);
     });
-    console.log('shiiiiit');
     console.log(list);
     this.setState({formData : {
       quantity: {

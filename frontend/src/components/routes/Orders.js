@@ -42,27 +42,40 @@ export default class Orders extends React.Component {
       });
   }
 
-  goto () {
+  goto = (event2) => {
+    event2.preventDefault();
+    var config2 = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'fasz': document.cookie,
+      crossdomain: true
+    };
+    console.log('kutyafasza');
+    axios.defaults.headers.post['Content-Type'] = 'application/json';
     axios
-      .post('http://127.0.0.1:8080/ordering', {
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Authorization': document.cookie
-
-        }
-      })
+      .post('http://127.0.0.1:8080/ordering',  { headers: config2 })
       .then(function (response) {
         const status = JSON.parse(response.status);
-        const orderID = JSON.parse(status.data.id);
-        
-        window.location.replace(`/orders/${status.data.id}/newOrder`);
-      });
+        const orderID = JSON.parse(response.data.id);
+        window.location.replace(`/ordering/${orderID}/newOrder`);
+      })
+      .catch(function (error) {
+        if (error.response) {
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+        } else if (error.request) {
+            console.log(error.request);
+        } else {
+            console.log('Error', error.message);
+        }
+        console.log(error.config);
+        console.log(error);
+    });
   }
 
   render () {
-    console.log(this.state);
     return (
       <div>
         <MyHeader />
