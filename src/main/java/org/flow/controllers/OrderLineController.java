@@ -1,9 +1,11 @@
 package org.flow.controllers;
 
+import com.google.zxing.WriterException;
 import org.flow.configuration.Validations;
 import org.flow.models.OrderLine;
 import org.flow.models.Ordering;
 import org.flow.models.Product;
+import org.flow.qr_code.QRCGenerator;
 import org.flow.repositories.OrderLineRepository;
 import org.flow.repositories.OrderingRepository;
 import org.flow.repositories.ProductRepository;
@@ -12,7 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -71,23 +76,50 @@ public class OrderLineController {
     }
 
     //create new orderLine
-    @PostMapping(path="/{id}/orderlines")
-    public @ResponseBody ResponseEntity addNewOrderLine (@PathVariable("id") Long orderId, @RequestBody String orderLine, @RequestHeader(value = "Authorization") String token) {
-        if(validations.stayingALive(token)) {
-            if (validations.isAdmin(token)) {
-                OrderLine newOrderLine = new OrderLine();
-                JSONObject jsonObject = new JSONObject(orderLine);
-                newOrderLine.setOrdering(orderingRepository.findById(orderId).get());
-                newOrderLine.setProduct(productRepository.findByName(jsonObject.getString("productName")));
-                newOrderLine.setQuantity(jsonObject.getInt("quantity"));
-                orderLineRepository.save(newOrderLine);
-                return ResponseEntity.ok(newOrderLine);
-            } else {
+    @PostMapping(path="/{id}/newOrder")
+    public @ResponseBody ResponseEntity addNewOrderLine (@PathVariable("id") Long orderId, @RequestBody String orderLines /*@RequestHeader(value = "Authorization") String token*/) {
+        //if(validations.stayingALive(token)) {
+            //if (validations.isAdmin(token)) {
+                System.out.println(orderLines);
+
+                JSONObject jsonObject = new JSONObject(orderLines);
+                System.out.println(jsonObject);
+                String lines = jsonObject.toString();
+                lines = lines.replace("{", "");
+                lines = lines.replace("}", "");
+                lines = lines.replace("\"", "");
+                String [] lineArray = lines.split("[,:]");
+                for(int i = 0; i < lineArray.length; i++) {
+                    OrderLine newOrderLine = new OrderLine();
+                    newOrderLine.setOrdering(orderingRepository.findById(orderId).get());
+                    newOrderLine.setProduct(productRepository.findByName(lineArray[i]));
+                    i++;
+                    newOrderLine.setQuantity(Integer.parseInt(lineArray[i]));
+                    orderLineRepository.save(newOrderLine);
+                }
+                QRCGenerator qrcGenerator = new QRCGenerator();
+                String path = "";
+                try {
+                    path = qrcGenerator.generateQRCode(orderId);
+                } catch (WriterException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                e.printStackTrace();
+                }
+                Ordering generated = new Ordering();
+                generated = orderingRepository.findById(orderId).get();
+                System.out.println(generated.getId());
+                generated.setQrCodePath(path);
+                orderingRepository.save(generated);
+                return ResponseEntity.ok(path);
+
+
+            /*} else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
             }
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session validations.");
-        }
+        }*/
     }
 
     //update orderLine

@@ -28,23 +28,19 @@ public class QRCGenerator {
     @Autowired
     private OrderingRepository orderingRepository;
 
-    public static void main(String[] args) throws IOException, WriterException {
-    }
-
-    public void generateQRCode(Long id)
+    public String generateQRCode(Long id)
             throws WriterException, IOException {
+                System.out.println(id);
         int size = 300;
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         Map<EncodeHintType, Object> hints = new HashMap<>();
         hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
         String rndchars = RandomStringUtils.randomAlphanumeric(4);
         String uniquefilename = new SimpleDateFormat("'QR_'yyyyMMdd-HHmm'_'").format(new Date());
-        Path path = FileSystems.getDefault().getPath("myQRcodes/", uniquefilename + rndchars + ".png");
-        BitMatrix bitMatrix = qrCodeWriter.encode(path.toString().split("/")[1], BarcodeFormat.QR_CODE, size, size, hints);
+        Path path = FileSystems.getDefault().getPath("frontend/public/", uniquefilename + rndchars + ".png");
+        BitMatrix bitMatrix = qrCodeWriter.encode(uniquefilename + rndchars + ".png", BarcodeFormat.QR_CODE, size, size, hints);
         MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
-        Ordering generated = orderingRepository.findById(id).get();
-        generated.setQrCodePath(path.toString().split("/")[1]);
-        orderingRepository.save(generated);
+        return uniquefilename + rndchars + ".png";
     }
 }
 

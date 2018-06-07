@@ -13,6 +13,8 @@ import NewProduct from './routes/Products/ProductItem';
 import Users from './routes/Users';
 import Registration from './routes/Registration';
 import NotFound from './routes/NotFound';
+import QRCode from './routes/QRCode';
+
 //import AchievementsLine from './routes/Achievements/AchievementsLine';
 import NewAchievement from './routes/Achievements/CreateAchievement/CreateAchievementForm';
 //import AchievementDetails from './routes/AchievementDetails';
@@ -25,12 +27,13 @@ const Router = () => (
         <Route path='/registration' component={Registration} />
         <Route exact path='/' component={Login} />
         <Route path='/achievements' component={Achievements} />
+        <Route path='/ordering/:id/newOrder' component={NewOrder} />
         <Route path='/orders' component={Orders} />
-        <Route path='/newOrder' component={NewOrder} />
         <Route path='/newProduct' component={NewProduct} />
         <Route path='/products' component={Products} />
         <Route path='/users' component={Users} />
         <Route path='/home' component={Home} />
+        <Route path='/QRCode' component={QRCode} />
         <Route component={NotFound} />
       </Switch>
       <ModalFooter>

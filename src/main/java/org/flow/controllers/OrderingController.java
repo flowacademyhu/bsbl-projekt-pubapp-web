@@ -61,21 +61,21 @@ public class OrderingController {
 
     //create new ordering
     @PostMapping
-    public @ResponseBody ResponseEntity addNewOrdering (@RequestHeader(value = "Authorization") String token) {
-        if(validations.stayingALive(token)) {
-            if (validations.isAdmin(token)) {
+    public @ResponseBody ResponseEntity addNewOrdering (/*@RequestHeader(value = "Authorization") String token*/) {
+        //if(validations.stayingALive(token)) {
+          //  if (validations.isAdmin(token)) {
                 Ordering newOrdering = new Ordering();
                 newOrdering.setQrCodePath("qrCodePath");
                 orderingRepository.save(newOrdering);
                 return ResponseEntity.ok(newOrdering);
-            } else {
+            /*} else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
             }
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session validations.");
-        }
+        }*/
     }
-
+    /*
     @GetMapping(path="/{id}/generate")
     public @ResponseBody ResponseEntity generateCode (@PathVariable("id") Long id, @RequestHeader(value = "Authorization") String token) {
         if(validations.stayingALive(token)) {
@@ -95,6 +95,7 @@ public class OrderingController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session validations.");
         }
     }
+    */
 
     //delete ordering by ID
     @DeleteMapping(path = "/{id}")
