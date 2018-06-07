@@ -70,7 +70,6 @@ public class UserController {
 
     //create new user
     @PostMapping
-<<<<<<< HEAD
     public @ResponseBody
     ResponseEntity addNewUser(@RequestBody String user) {
         User newUser = new User();
@@ -99,36 +98,6 @@ public class UserController {
             newUser.setGender(jsonObject.getBoolean("gender"));
             userRepository.save(newUser);
             return ResponseEntity.ok(newUser);
-=======
-    public @ResponseBody ResponseEntity addNewUser (@RequestBody String user) {
-
-            User newUser = new User();
-            JSONObject jsonObject = new JSONObject(user);
-            if (userRepository.findByEmail(jsonObject.getString("email")) != null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This e-mail address is already taken.");
-            } else {
-                PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-                String hashedPassword = passwordEncoder.encode(jsonObject.getString("password"));
-                newUser.setPassword(hashedPassword);
-                newUser.setFirstName(jsonObject.getString("firstName"));
-                newUser.setLastName(jsonObject.getString("lastName"));
-                newUser.setNickName(jsonObject.getString("nickName"));
-                newUser.setEmail(jsonObject.getString("email"));
-                newUser.setRoleType(jsonObject.getString("role"));
-                if (jsonObject.getInt("xp") < 0) {
-                    newUser.setXp(jsonObject.getInt("xp"));
-                }
-                Date dob = null;
-                try {
-                    dob = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("dob"));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                newUser.setDob(dob);
-                newUser.setGender(jsonObject.getBoolean("gender"));
-                userRepository.save(newUser);
-                return ResponseEntity.ok(newUser);
->>>>>>> 1f1d0fff23051dd4a5e2b2142c2d3e82f25c61fb
         }
     }
 

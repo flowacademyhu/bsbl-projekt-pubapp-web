@@ -29,6 +29,9 @@ public class Ordering {
     @Column(name = "qr_code_path", nullable = false)
     private String qrCodePath;
 
+    @Column(name = "is_read", nullable = false, columnDefinition = "int default 0")
+    private boolean isRead;
+
     public Long getId() {
         return id;
     }
@@ -59,5 +62,13 @@ public class Ordering {
 
     public void setQrCodePath(String qrCodePath) {
         this.qrCodePath = qrCodePath;
+    }
+
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setRead(boolean read) {
+        isRead = read;
     }
 }
