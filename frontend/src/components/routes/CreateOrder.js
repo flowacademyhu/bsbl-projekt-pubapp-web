@@ -9,11 +9,14 @@ export default class CreateOrders extends React.Component {
     this.state = {
       items: [],
       orders: {
-      }
+      },
+      currentLocation: ''
     };
   }
 
   async componentWillMount () {
+    this.setState ({currentLocation : this.props.location.pathname});
+ console.log('nuni');
     var config = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -47,8 +50,41 @@ export default class CreateOrders extends React.Component {
     this.prepareOrders();
   }
 
-  goto () {
-    window.location.replace('/Orders');
+  onClick = (event) => {
+    var config2 = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Authorization': document.cookie,
+      crossdomain: true
+    };
+    event.preventDefault();
+    let data = JSON.stringify(this.state.orders);
+    axios.defaults.headers.post['Content-Type'] = 'application/json';
+    axios
+      .post(`http://127.0.0.1:8080${this.state.currentLocation}`, data, { headers: config2 })
+      .then(function (response) {
+        const status = JSON.parse(response.status);
+        console.log(status);
+        console.log(response);
+        if(status === +200) {
+          console.log(response.data);
+        }
+        //window.location.replace('/orders');
+      })
+      .catch(function (error) {
+        if (error.response) {
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+        } else if (error.request) {
+            console.log(error.request);
+        } else {
+            console.log('Error', error.message);
+        }
+        console.log(error.config);
+        console.log(error);
+    });
   }
 
   render () {
@@ -65,7 +101,7 @@ export default class CreateOrders extends React.Component {
           </thead>
           <tbody>{this.renderProducts()}</tbody>
         </table>
-        <button type='submit' >Done</button>
+        <button type='submit' onClick={this.onClick.bind(this)}>Done</button>
       </div>
     );
   }
