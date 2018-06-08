@@ -48,10 +48,9 @@ export default class Orders extends React.Component {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Access-Control-Allow-Origin': '*',
-      'fasz': document.cookie,
+      'Authorization': document.cookie,
       crossdomain: true
     };
-    console.log('kutyafasza');
     axios.defaults.headers.post['Content-Type'] = 'application/json';
     axios
       .post('http://127.0.0.1:8080/ordering',  { headers: config2 })
@@ -86,8 +85,7 @@ export default class Orders extends React.Component {
   }
 
   viewQrCode (filename) {
-    let link = '/myQRcodes/' + filename;
-    window.open(link, '_blank');
+    window.open('localhost:3000/' + filename, "_blank");
   }
 
   renderOrders () {

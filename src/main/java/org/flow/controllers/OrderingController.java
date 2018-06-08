@@ -75,27 +75,7 @@ public class OrderingController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session validations.");
         }*/
     }
-    /*
-    @GetMapping(path="/{id}/generate")
-    public @ResponseBody ResponseEntity generateCode (@PathVariable("id") Long id, @RequestHeader(value = "Authorization") String token) {
-        if(validations.stayingALive(token)) {
-            if (validations.isAdmin(token)) {
-                try {
-                    qrcGenerator.generateQRCode(id);
-                } catch (WriterException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return ResponseEntity.ok(id + ". order's qr code saved");
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
-            }
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session validations.");
-        }
-    }
-    */
+ 
 
     //delete ordering by ID
     @DeleteMapping(path = "/{id}")
