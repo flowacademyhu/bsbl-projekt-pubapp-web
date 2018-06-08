@@ -31,7 +31,7 @@ public class QRCGenerator {
     public String generateQRCode(Long id)
             throws WriterException, IOException {
                 System.out.println(id);
-        int size = 300;
+        int size = 600;
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         Map<EncodeHintType, Object> hints = new HashMap<>();
         hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
