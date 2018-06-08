@@ -51,7 +51,8 @@ export default class Products extends React.Component {
     return (
       <div>
         <MyHeader />
-        <h3>Products<button onClick={this.goto.bind(this)} type='submit'>Add new product</button></h3>
+        <h3>Products</h3>
+        <button onClick={this.goto.bind(this)} type='submit'>Add new product</button>
         <ul>List of all the products: {this.renderProducts()}</ul>
       </div>
     );
