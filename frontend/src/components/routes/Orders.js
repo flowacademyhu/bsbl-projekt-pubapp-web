@@ -78,7 +78,8 @@ export default class Orders extends React.Component {
     return (
       <div>
         <MyHeader />
-        <h3>Orders<button onClick={this.goto.bind(this)} type='submit'>New order</button></h3>
+        <h3>Orders</h3>
+        <button onClick={this.goto.bind(this)} type='submit'>New order</button>
         <ul>List of all the orders: {this.renderOrders()}</ul>
       </div>
     );

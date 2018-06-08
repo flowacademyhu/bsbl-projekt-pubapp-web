@@ -5,10 +5,22 @@ export default class MyHeader extends React.Component {
     return (
       <div>
         <header>
-          <NavLink to='/products'> Products</NavLink>
-          <NavLink to='/achievements'> Achivements</NavLink>
-          <NavLink to='/orders'>Orders</NavLink>
-          <NavLink to='/users'>Users</NavLink>
+          <NavLink to='/products' style={{
+    fontWeight: 'bold',
+    color: 'white'
+   }}> Products</NavLink>
+          <NavLink to='/achievements' style={{
+    fontWeight: 'bold',
+    color: '#white'
+   }}> Achivements</NavLink>
+          <NavLink to='/orders' style={{
+    fontWeight: 'bold',
+    color: '#white'
+   }}>Orders</NavLink>
+          <NavLink to='/users' style={{
+    fontWeight: 'bold',
+    color: '#white'
+   }}>Users</NavLink>
         </header>      </div>
     );
   }
