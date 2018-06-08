@@ -14,6 +14,8 @@ import Users from './routes/Users';
 import Registration from './routes/Registration';
 import NotFound from './routes/NotFound';
 import QRCode from './routes/QRCode';
+import Logout from './routes/Logout';
+
 
 //import AchievementsLine from './routes/Achievements/AchievementsLine';
 import NewAchievement from './routes/Achievements/CreateAchievement/CreateAchievementForm';
@@ -34,6 +36,8 @@ const Router = () => (
         <Route path='/users' component={Users} />
         <Route path='/home' component={Home} />
         <Route path='/QRCode' component={QRCode} />
+        <Route path='/Logout' component={Logout} />
+
         <Route component={NotFound} />
       </Switch>
       <ModalFooter>

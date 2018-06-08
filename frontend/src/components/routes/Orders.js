@@ -86,8 +86,7 @@ export default class Orders extends React.Component {
   }
 
   viewQrCode (filename) {
-    let link = '/myQRcodes/' + filename;
-    window.open(link, '_blank');
+    window.open('localhost:3000/' + filename, "_blank");
   }
 
   renderOrders () {

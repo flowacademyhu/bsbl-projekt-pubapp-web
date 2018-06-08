@@ -21,6 +21,10 @@ export default class MyHeader extends React.Component {
     fontWeight: 'bold',
     color: '#white'
    }}>Users</NavLink>
+          <NavLink to='/logout' style={{
+    fontWeight: 'bold',
+    color: '#white'
+   }}>Logout</NavLink>
         </header>      </div>
     );
   }
