@@ -88,7 +88,7 @@ class CreateAchievementConditionForm extends React.Component {
         element: 'input',
         value: '',
         label: true,
-        labelText: 'quantity',
+        labelText: 'Quantity',
         config: {
           name: 'name_input',
           text: 'text',
@@ -104,7 +104,7 @@ class CreateAchievementConditionForm extends React.Component {
         element: 'select',
         value: '',
         label: true,
-        labelText: 'product',
+        labelText: 'Product',
         config: {
           name: 'name_input',
           options: list

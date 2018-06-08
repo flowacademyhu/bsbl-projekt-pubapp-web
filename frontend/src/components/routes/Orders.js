@@ -93,7 +93,14 @@ export default class Orders extends React.Component {
     const renderOrders = this.state.items.map((order, i) => {
       return (
         <form >
-          <li key={order.id}>Created at: {order.created} <button onClick={this.viewQrCode.bind(this, order.qrCodePath)} type='submit'>view QR code</button>
+          <li key={order.id}>Created at: {new Intl.DateTimeFormat('hu-HU', { 
+    year: 'numeric', 
+    month: '2-digit', 
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+}).format(order.created)} <button onClick={this.viewQrCode.bind(this, order.qrCodePath)} type='submit'>view QR code</button>
           </li>
         </form>
       );

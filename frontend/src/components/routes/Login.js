@@ -111,8 +111,8 @@ class Login extends Component {
           <h1>Welcome </h1>
           <h2> Orgiginal PubAPP </h2>
           <ul>
-            <li> gooogle play  link <a href='asdasdasd'> click me </a>  </li>
-            <li> app store link <a href='asdasdasd'>click me </a> </li>
+            <li>  <a href='https://play.google.com'> Gooogle Play link </a>  </li>
+            <li>  <a href='https://www.apple.com/lae/ios/app-store/'>App Store link </a> </li>
           </ul>
         </Jumbotron>
       </div>
