@@ -76,6 +76,7 @@ class CreateAchievementConditionForm extends React.Component {
     console.log(this.props.products);
     var list = [];
     var element = {val: '', text: ''};
+    list.push({val: 'Select product', text: 'Select product'})
     this.state.productList.forEach(product => {
       element = {val: '', text: ''};
       element.val = product.name;
