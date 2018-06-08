@@ -9,7 +9,8 @@ export default class CreateOrders extends React.Component {
     this.state = {
       items: [],
       orders: {
-      }
+      },
+      currentLocation: ''
     };
   }
 
@@ -67,13 +68,10 @@ export default class CreateOrders extends React.Component {
         console.log(response);
         if(status === +200) {
           console.log(response.data);
-            console.log(`file:///home/rojik/Tamas/bsbl-projekt-pubapp-web/frontend/src/components/header/${response.data}`, "_blank");
-            //window.open('/QR_20180607-1543_Y9bc.png', "_blank");
             window.open('localhost:3000/' + response.data, "_blank");
           }
           
         
-        //window.location.replace('/orders');
       })
       .catch(function (error) {
         if (error.response) {

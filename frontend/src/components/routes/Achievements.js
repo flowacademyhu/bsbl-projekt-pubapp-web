@@ -54,8 +54,9 @@ export default class Products extends React.Component {
     return (
       <div>
         <MyHeader />
-        <h3>Achievements<button onClick={this.goto.bind(this)} type='submit'>Add new achievement</button></h3>
-        <ul>List of all the achievements: {this.renderAchievements()}</ul>
+        <h3>Achievements</h3>
+        <button onClick={this.goto.bind(this)} type='submit'>Add new achievement</button>
+        <ul>{this.renderAchievements()}</ul>
       </div>
     );
   }
@@ -65,7 +66,11 @@ export default class Products extends React.Component {
     var products = this.state.products;
     console.log(products);
     const renderAchievements = this.state.items.map(function (achievement, i) {
-      return <li key={achievement.id}> Name: {achievement.name}, Description: {achievement.description}, xpValue: {achievement.xpValue}, expiration: {achievement.expiration}
+      return <li key={achievement.id}> Name: {achievement.name}, Description: {achievement.description}, xpValue: {achievement.xpValue}, expiration: {new Intl.DateTimeFormat('hu-HU', { 
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    }).format(achievement.expiration)}
         <AchievementDetails id={achievement.id} />
         <CreateAchievementConditionForm id={achievement.id} />
       </li>;

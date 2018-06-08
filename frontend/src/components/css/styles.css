@@ -2,7 +2,7 @@ body {
     padding:0;
     margin:0;
     font-family: 'Roboto', sans-serif;
-    background-colo: white;
+    background-color: white;
 }
 textarea {
     resize: none;
@@ -47,7 +47,7 @@ input {
 }
 
 button {
-    background: #3F51B5;
+    background: #009999;
     color: #fff;
     font-size: 15px;
     padding: 10px 20px;
@@ -65,5 +65,9 @@ select {
 }
 
 p {
-    color: red;
+    color: #009999;
+}
+
+li {
+  list-style-type: none;
 }

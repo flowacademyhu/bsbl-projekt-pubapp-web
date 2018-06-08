@@ -35,7 +35,7 @@ public class OrderingController {
     public @ResponseBody ResponseEntity findAllOrders (@RequestHeader(value = "Authorization") String token) {
         if(validations.stayingALive(token)) {
             if (validations.isAdmin(token)) {
-                return ResponseEntity.ok(orderingRepository.findAll());
+                return ResponseEntity.ok(orderingRepository.findAllByOrderByCreatedDesc());
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You shall not pass.");
             }

@@ -10,8 +10,8 @@ export default class Home extends React.Component {
         <MyHeader />
         <Jumbotron>
           <h1>Welcome </h1>
-          <h2> to the admin home page </h2>
-          <Link to='/registration'>click here to create new admin access</Link>
+          <h2> Admin home page </h2>
+          <Link to='/registration'>New admin registration</Link>
         </Jumbotron>
       </div>
     );

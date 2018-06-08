@@ -56,7 +56,7 @@ export default class Users extends React.Component {
   renderUsers () {
     console.log(this.state.items);
     const renderUser = this.state.items.map(function (user, i) {
-      return <li key={user.id}>XP: {user.xp}, NickName: {user.nickName} (Real name: {user.firstName} {user.lastName})
+      return <li key={user.id}>XP: {user.xp}, Nickame: {user.nickName} (Real name: {user.firstName} {user.lastName})
       </li>;
     });
 
