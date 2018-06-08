@@ -54,7 +54,7 @@ export default class CreateOrders extends React.Component {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Access-Control-Allow-Origin': '*',
-      'fasz': document.cookie,
+      'Authorization': document.cookie,
       crossdomain: true
     };
     event.preventDefault();
